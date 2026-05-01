@@ -9,34 +9,6 @@
 <meta name="theme-color" content="#003087">
 <title>LFH09 J2011 · Treningslogg</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
-
-<!-- ═══════════════════════════════════════════════════════════
-  FIREBASE OPPSETT – GJØR DETTE FØR DU DELER APPEN
-  ───────────────────────────────────────────────────────────
-  STEG 1: Gå til https://console.firebase.google.com
-  STEG 2: Klikk "Add project" → gi det navn f.eks. "lfh09-trening"
-  STEG 3: I prosjektet: klikk </> (Web) → registrer appen
-  STEG 4: Kopier firebaseConfig-verdiene og lim inn nedenfor
-  STEG 5: Authentication → Sign-in method → Google → Enable
-  STEG 6: Firestore Database → Create database → Production mode
-           Velg region: europe-west3 (Frankfurt)
-  STEG 7: Firestore → Rules → Erstatt innholdet med dette:
-
-    rules_version = '2';
-    service cloud.firestore {
-      match /databases/{database}/documents {
-        match /users/{userId}/logs/{logId} {
-          allow read, write: if request.auth != null
-                             && request.auth.uid == userId;
-        }
-      }
-    }
-
-  STEG 8: Publiser filen på en webserver (GitHub Pages er gratis)
-  STEG 9: I Firebase Console → Authentication → Settings →
-          Authorized domains → legg til domenet ditt
-  ═══════════════════════════════════════════════════════════ -->
-
 <style>
 :root {
   --blue:      #003087;
@@ -54,20 +26,12 @@
 }
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 html, body { height: 100%; }
-body {
-  font-family: 'Barlow', sans-serif;
-  background: var(--off); color: var(--text);
-  padding-bottom: env(safe-area-inset-bottom);
-}
-
-/* HEADER */
+body { font-family: 'Barlow', sans-serif; background: var(--off); color: var(--text); padding-bottom: env(safe-area-inset-bottom); }
 .header { background: var(--blue); padding-top: max(env(safe-area-inset-top),0px); }
 .header-inner { display:flex; align-items:center; justify-content:space-between; padding: 14px 18px 0; }
 .logo-club { font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:20px; color:var(--white); letter-spacing:1px; }
 .logo-sub  { font-family:'Barlow Condensed',sans-serif; font-size:11px; color:var(--mid); letter-spacing:2px; text-transform:uppercase; margin-top:1px; }
 .season-badge { background:var(--red); color:white; font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:11px; letter-spacing:1px; padding:4px 9px; border-radius:4px; }
-
-/* AUTH BAR */
 .auth-bar { display:flex; align-items:center; justify-content:space-between; padding:10px 18px 14px; border-bottom:1px solid rgba(255,255,255,0.08); }
 .auth-info { display:flex; align-items:center; gap:9px; }
 .auth-avatar { width:28px; height:28px; border-radius:50%; border:2px solid rgba(255,255,255,0.3); }
@@ -77,23 +41,15 @@ body {
 .auth-btn:hover { opacity:.85; }
 .sign-in  { background:var(--blue-mid); color:white; }
 .sign-out { background:rgba(255,255,255,0.12); color:var(--mid); }
-
-/* DEMO BANNER */
 .demo-banner { display:none; align-items:center; gap:10px; background:#fff3cd; padding:9px 16px; font-size:12px; color:#856404; line-height:1.4; border-bottom:1px solid #ffd57e; }
-
-/* NAV */
 .nav { display:flex; background:var(--blue-dark); border-bottom:3px solid var(--red); }
 .nav-btn { flex:1; padding:11px 4px; background:none; border:none; color:var(--mid); font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:12px; letter-spacing:1px; text-transform:uppercase; cursor:pointer; transition:color .2s; display:flex; flex-direction:column; align-items:center; gap:2px; border-bottom:3px solid transparent; margin-bottom:-3px; }
 .nav-btn .ni { font-size:17px; }
 .nav-btn.active { color:var(--white); border-bottom-color:var(--red); }
-
-/* MAIN */
 .main { padding:18px 15px 80px; max-width:480px; margin:0 auto; }
 .view { display:none; } .view.active { display:block; }
 .st { font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:11px; letter-spacing:2.5px; text-transform:uppercase; color:var(--grey); margin:22px 0 10px; }
 .st:first-child { margin-top:0; }
-
-/* PROGRESS HERO */
 .prog-hero { background:var(--blue); border-radius:var(--r); padding:18px; color:white; position:relative; overflow:hidden; margin-bottom:16px; }
 .prog-hero::before { content:''; position:absolute; top:-30px; right:-30px; width:130px; height:130px; border-radius:50%; background:rgba(255,255,255,.05); }
 .prog-label { font-family:'Barlow Condensed',sans-serif; font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--mid); margin-bottom:4px; }
@@ -105,8 +61,6 @@ body {
 .prog-stats { display:flex; justify-content:space-between; margin-top:6px; }
 .prog-stat  { font-family:'Barlow Condensed',sans-serif; font-size:12px; color:var(--mid); }
 .prog-stat strong { color:white; }
-
-/* WEEK CARDS */
 .week-grid { display:flex; flex-direction:column; gap:10px; }
 .week-card { background:white; border-radius:var(--r); box-shadow:var(--shadow); overflow:hidden; }
 .week-card-header { display:flex; align-items:center; justify-content:space-between; padding:12px 15px; background:var(--light); border-bottom:2px solid var(--mid); }
@@ -126,8 +80,6 @@ body {
 .session-btn { background:var(--blue); color:white; border:none; border-radius:7px; font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:12px; padding:6px 11px; cursor:pointer; white-space:nowrap; transition:background .15s; flex-shrink:0; }
 .session-btn:hover { background:var(--blue-mid); }
 .session.logged .session-btn { background:#dcfce7; color:#15803d; }
-
-/* LOG FORM */
 .log-form-card { background:white; border-radius:var(--r); box-shadow:var(--shadow); padding:18px; margin-bottom:16px; }
 .form-label { font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:11px; letter-spacing:1px; text-transform:uppercase; color:var(--grey); margin-bottom:5px; display:block; }
 .form-select,.form-input { width:100%; padding:10px 13px; border:1.5px solid var(--mid); border-radius:9px; font-family:'Barlow',sans-serif; font-size:14px; color:var(--text); background:var(--off); margin-bottom:13px; appearance:none; -webkit-appearance:none; outline:none; transition:border-color .2s; }
@@ -140,15 +92,11 @@ body {
 .submit-btn:hover { background:var(--blue-mid); }
 .submit-btn:active { transform:scale(.98); }
 .submit-btn:disabled { opacity:.6; cursor:default; }
-
-/* RULE CARDS */
 .rule-cards { display:flex; flex-direction:column; gap:9px; }
 .rule-card { background:white; border-radius:var(--r); box-shadow:var(--shadow); padding:13px 15px; display:flex; align-items:flex-start; gap:13px; }
 .rule-num  { width:32px; height:32px; border-radius:8px; background:var(--blue); color:white; font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:18px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
 .rule-title { font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:14px; color:var(--text); margin-bottom:2px; }
 .rule-text  { font-size:12px; color:var(--grey); line-height:1.5; }
-
-/* HISTORY */
 .log-entry { background:white; border-radius:var(--r); box-shadow:var(--shadow); padding:13px 15px; display:flex; align-items:flex-start; gap:13px; margin-bottom:9px; animation:slideIn .25s ease; }
 @keyframes slideIn { from{opacity:0;transform:translateY(-6px)} to{opacity:1;transform:translateY(0)} }
 .log-dot   { width:34px; height:34px; border-radius:50%; background:var(--blue); display:flex; align-items:center; justify-content:center; font-size:15px; color:white; flex-shrink:0; }
@@ -159,8 +107,6 @@ body {
 .log-feel  { font-size:18px; flex-shrink:0; margin-top:2px; }
 .log-delete { background:none; border:none; color:var(--mid); font-size:15px; cursor:pointer; padding:2px 4px; border-radius:4px; transition:color .15s; }
 .log-delete:hover { color:var(--red); }
-
-/* STATS */
 .moti-card { background:var(--blue); border-radius:var(--r); padding:18px; color:white; margin-bottom:15px; position:relative; overflow:hidden; }
 .moti-card::before { content:'"'; position:absolute; top:-10px; right:10px; font-size:110px; color:rgba(255,255,255,.06); font-family:Georgia,serif; line-height:1; }
 .moti-text { font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:17px; line-height:1.4; position:relative; }
@@ -177,8 +123,6 @@ body {
 .frbar   { flex:1; height:9px; background:var(--light); border-radius:5px; overflow:hidden; }
 .frfill  { height:100%; background:var(--blue); border-radius:5px; transition:width .6s ease; }
 .frcnt   { font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:14px; color:var(--grey); width:18px; text-align:right; }
-
-/* MISC */
 .empty { text-align:center; padding:40px 20px; color:var(--grey); }
 .empty-icon { font-size:44px; margin-bottom:9px; }
 .empty-text { font-size:14px; line-height:1.5; }
@@ -213,7 +157,6 @@ body {
 </nav>
 
 <div class="main">
-
   <div class="view active" id="view-program">
     <div class="prog-hero">
       <div class="prog-label">DIN PROGRESJON</div>
@@ -278,8 +221,8 @@ body {
       <div class="feel-row"><div class="fremoji">😤</div><div class="frbar"><div class="frfill" id="feel-bar-tungt" style="width:0%"></div></div><div class="frcnt" id="feel-cnt-tungt">0</div></div>
     </div>
   </div>
-
 </div>
+
 <div class="toast" id="toast"></div>
 
 <script type="module">
@@ -289,29 +232,27 @@ import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChang
 import { getFirestore, collection, doc, setDoc, deleteDoc, onSnapshot, query, orderBy }
                               from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-// ▼▼▼ LIM INN DIN FIREBASE-KONFIGURASJON HER ▼▼▼
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+// ── Firebase konfigurasjon ──────────────────────────────────
 const firebaseConfig = {
-  apiKey: "AIzaSyA_TbOi0heY4JrB-Ly6VnI5Tk0N3pufB40",
-  authDomain: "lfh09j2011sommerlog.firebaseapp.com",
-  projectId: "lfh09j2011sommerlog",
-  storageBucket: "lfh09j2011sommerlog.firebasestorage.app",
+  apiKey:            "AIzaSyA_TbOi0heY4JrB-Ly6VnI5Tk0N3pufB40",
+  authDomain:        "lfh09j2011sommerlog.firebaseapp.com",
+  projectId:         "lfh09j2011sommerlog",
+  storageBucket:     "lfh09j2011sommerlog.firebasestorage.app",
   messagingSenderId: "207901704516",
-  appId: "1:207901704516:web:fb67d00fa340298fa59711",
-  measurementId: "G-K2L4WCG3J5"
+  appId:             "1:207901704516:web:fb67d00fa340298fa59711"
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-// ▲▲▲ ──────────────────────────────────────── ▲▲▲
+// ── Init (én gang) ──────────────────────────────────────────
+const app      = initializeApp(firebaseConfig);
+const auth     = getAuth(app);
+const db       = getFirestore(app);
+const provider = new GoogleAuthProvider();
 
-const FIREBASE_READY = firebaseConfig.apiKey !== "DIN_API_KEY";
+let currentUser = null;
+let unsubLogs   = null;
+let localLogs   = JSON.parse(localStorage.getItem('lfh-logs') || '[]');
 
-let auth, db, provider, currentUser = null, unsubLogs = null;
-let localLogs = JSON.parse(localStorage.getItem('lfh-logs') || '[]');
-
+// ── Program ─────────────────────────────────────────────────
 const PROGRAM = [
   {week:1,phase:"Uke 1–2",tag:"Kom i gang",sessions:[
     {id:"1-1",label:"Økt 1",desc:"15 min rolig jogg. Stopp og gå hvis du må."},
@@ -355,35 +296,30 @@ const MOTIS = [
   "Fullført! Du møter opp til høsten som en sterkere spiller. 🏆",
 ];
 
-// ── Firebase init ───────────────────────────────────────────
-if (FIREBASE_READY) {
-  const app = initializeApp(firebaseConfig);
-  auth     = getAuth(app);
-  db       = getFirestore(app);
-  provider = new GoogleAuthProvider();
-  onAuthStateChanged(auth, user => {
-    currentUser = user;
-    updateAuthUI();
-    if (user) { subscribeLogs(user.uid); }
-    else { if (unsubLogs) { unsubLogs(); unsubLogs = null; } refreshAll(localLogs); }
-  });
-} else {
+// ── Auth ────────────────────────────────────────────────────
+onAuthStateChanged(auth, user => {
+  currentUser = user;
   updateAuthUI();
-  refreshAll(localLogs);
-}
+  if (user) {
+    subscribeLogs(user.uid);
+  } else {
+    if (unsubLogs) { unsubLogs(); unsubLogs = null; }
+    refreshAll(localLogs);
+  }
+});
 
 function subscribeLogs(uid) {
   if (unsubLogs) unsubLogs();
   unsubLogs = onSnapshot(
     query(collection(db, "users", uid, "logs"), orderBy("date", "desc")),
-    snap => refreshAll(snap.docs.map(d => ({id: d.id, ...d.data()})))
+    snap => refreshAll(snap.docs.map(d => ({ id: d.id, ...d.data() })))
   );
 }
 
 async function addLog(entry) {
-  if (FIREBASE_READY && currentUser) {
+  if (currentUser) {
     const ref = doc(collection(db, "users", currentUser.uid, "logs"));
-    await setDoc(ref, {...entry, id: ref.id});
+    await setDoc(ref, { ...entry, id: ref.id });
   } else {
     localLogs.push(entry);
     localStorage.setItem('lfh-logs', JSON.stringify(localLogs));
@@ -392,7 +328,7 @@ async function addLog(entry) {
 }
 
 async function removeLog(id) {
-  if (FIREBASE_READY && currentUser) {
+  if (currentUser) {
     await deleteDoc(doc(db, "users", currentUser.uid, "logs", id));
   } else {
     localLogs = localLogs.filter(l => l.id !== id);
@@ -401,33 +337,38 @@ async function removeLog(id) {
   }
 }
 
-// ── Auth UI ─────────────────────────────────────────────────
 function updateAuthUI() {
   const bar  = document.getElementById('auth-bar');
   const demo = document.getElementById('demo-banner');
-  if (!FIREBASE_READY) {
-    demo.style.display = 'flex';
-    bar.innerHTML = `<div class="auth-info"><span class="auth-name">Demo-modus</span><span class="auth-sub">Firebase ikke satt opp ennå</span></div>`;
-    return;
-  }
   demo.style.display = 'none';
   if (currentUser) {
     bar.innerHTML = `
       <div class="auth-info">
         ${currentUser.photoURL ? `<img src="${currentUser.photoURL}" class="auth-avatar">` : ''}
-        <div><span class="auth-name">${currentUser.displayName || currentUser.email}</span>
-        <span class="auth-sub">☁️ Synkronisert med Google</span></div>
+        <div>
+          <span class="auth-name">${currentUser.displayName || currentUser.email}</span>
+          <span class="auth-sub">☁️ Synkronisert med Google</span>
+        </div>
       </div>
       <button class="auth-btn sign-out" id="btn-signout">Logg ut</button>`;
     document.getElementById('btn-signout').onclick = () => signOut(auth);
   } else {
     bar.innerHTML = `
-      <div class="auth-info"><span class="auth-name">Ikke innlogget</span><span class="auth-sub">Data lagres kun lokalt</span></div>
+      <div class="auth-info">
+        <span class="auth-name">Ikke innlogget</span>
+        <span class="auth-sub">Logg inn for skylagring</span>
+      </div>
       <button class="auth-btn sign-in" id="btn-signin">
-        <svg width="14" height="14" viewBox="0 0 24 24"><path fill="white" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="white" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="white" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="white" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+        <svg width="14" height="14" viewBox="0 0 24 24">
+          <path fill="white" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+          <path fill="white" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+          <path fill="white" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/>
+          <path fill="white" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+        </svg>
         Logg inn med Google
       </button>`;
-    document.getElementById('btn-signin').onclick = () => signInWithPopup(auth, provider).catch(console.error);
+    document.getElementById('btn-signin').onclick = () =>
+      signInWithPopup(auth, provider).catch(console.error);
   }
 }
 
@@ -454,19 +395,21 @@ function buildWeekGrid() {
     card.className = 'week-card';
     card.innerHTML = `
       <div class="week-card-header">
-        <div><div class="week-card-title">Uke ${week.week} · ${week.tag}</div>
-        <div class="week-card-sub">${week.phase}</div></div>
+        <div>
+          <div class="week-card-title">Uke ${week.week} · ${week.tag}</div>
+          <div class="week-card-sub">${week.phase}</div>
+        </div>
         <div class="week-badge ${bc}">${bt}</div>
       </div>
       <div class="sessions">${week.sessions.map(s => {
         const il = logged.has(s.id);
-        return `<div class="session ${il?'logged':''}">
-          <div class="session-check">${il?'✓':''}</div>
+        return `<div class="session ${il ? 'logged' : ''}">
+          <div class="session-check">${il ? '✓' : ''}</div>
           <div class="session-info">
             <div class="session-label">${s.label}</div>
             <div class="session-desc">${s.desc}</div>
           </div>
-          <button class="session-btn" onclick="goLog('${s.id}')">${il?'Logget ✓':'Logg'}</button>
+          <button class="session-btn" onclick="goLog('${s.id}')">${il ? 'Logget ✓' : 'Logg'}</button>
         </div>`;
       }).join('')}</div>`;
     grid.appendChild(card);
@@ -474,18 +417,18 @@ function buildWeekGrid() {
 }
 
 function updateProgress() {
-  const done = currentLogs.length, pct = Math.round(done/18*100), week = Math.min(6, Math.ceil(done/3)||0);
+  const done = currentLogs.length, pct = Math.round(done / 18 * 100), week = Math.min(6, Math.ceil(done / 3) || 0);
   document.getElementById('prog-done').textContent = done;
   document.getElementById('prog-bar').style.width  = pct + '%';
   document.getElementById('prog-pct').textContent  = pct + '%';
   if (!done) {
-    document.getElementById('prog-week').innerHTML = '–<span class="prog-of"> av 6 uker</span>';
+    document.getElementById('prog-week').innerHTML  = '–<span class="prog-of"> av 6 uker</span>';
     document.getElementById('prog-sub').textContent = 'Logg din første økt for å starte!';
   } else if (done >= 18) {
-    document.getElementById('prog-week').innerHTML = '6<span class="prog-of"> uker ✓</span>';
+    document.getElementById('prog-week').innerHTML  = '6<span class="prog-of"> uker ✓</span>';
     document.getElementById('prog-sub').textContent = 'Hele programmet fullført! 🎉';
   } else {
-    document.getElementById('prog-week').innerHTML = `${week}<span class="prog-of"> av 6 uker</span>`;
+    document.getElementById('prog-week').innerHTML  = `${week}<span class="prog-of"> av 6 uker</span>`;
     document.getElementById('prog-sub').textContent = `${pct}% fullført – fortsett jobben!`;
   }
 }
@@ -493,21 +436,21 @@ function updateProgress() {
 function updateStats() {
   const done = currentLogs.length;
   document.getElementById('stat-done').textContent = done;
-  document.getElementById('stat-left').textContent = Math.max(0, 18-done);
-  document.getElementById('stat-pct').textContent  = Math.round(done/18*100)+'%';
+  document.getElementById('stat-left').textContent = Math.max(0, 18 - done);
+  document.getElementById('stat-pct').textContent  = Math.round(done / 18 * 100) + '%';
   if (done) {
-    const latest = [...currentLogs].sort((a,b)=>new Date(b.date)-new Date(a.date))[0];
+    const latest = [...currentLogs].sort((a, b) => new Date(b.date) - new Date(a.date))[0];
     document.getElementById('stat-days').textContent =
       Math.round((new Date().setHours(0,0,0,0) - new Date(latest.date)) / 86400000);
   }
-  const c = {lett:0,passe:0,tungt:0};
-  currentLogs.forEach(l => { if (c[l.feel]!==undefined) c[l.feel]++; });
-  const mx = Math.max(1,...Object.values(c));
-  ['lett','passe','tungt'].forEach(f => {
-    document.getElementById(`feel-cnt-${f}`).textContent     = c[f];
-    document.getElementById(`feel-bar-${f}`).style.width     = (c[f]/mx*100)+'%';
+  const c = { lett: 0, passe: 0, tungt: 0 };
+  currentLogs.forEach(l => { if (c[l.feel] !== undefined) c[l.feel]++; });
+  const mx = Math.max(1, ...Object.values(c));
+  ['lett', 'passe', 'tungt'].forEach(f => {
+    document.getElementById(`feel-cnt-${f}`).textContent = c[f];
+    document.getElementById(`feel-bar-${f}`).style.width = (c[f] / mx * 100) + '%';
   });
-  document.getElementById('moti-text').textContent = MOTIS[Math.min(Math.floor(done/3), MOTIS.length-1)];
+  document.getElementById('moti-text').textContent = MOTIS[Math.min(Math.floor(done / 3), MOTIS.length - 1)];
 }
 
 function buildHistory() {
@@ -516,48 +459,49 @@ function buildHistory() {
     list.innerHTML = `<div class="empty"><div class="empty-icon">📋</div><div class="empty-text">Ingen økter logget ennå.<br>Gå til «Logg økt» for å starte!</div></div>`;
     return;
   }
-  const fe = {lett:'😊',passe:'💪',tungt:'😤'};
+  const fe = { lett: '😊', passe: '💪', tungt: '😤' };
   list.innerHTML = [...currentLogs]
-    .sort((a,b)=>new Date(b.date)-new Date(a.date))
+    .sort((a, b) => new Date(b.date) - new Date(a.date))
     .map(l => {
-      const si  = PROGRAM.flatMap(w=>w.sessions).find(s=>s.id===l.sessionId);
+      const si  = PROGRAM.flatMap(w => w.sessions).find(s => s.id === l.sessionId);
       const lbl = si ? `Uke ${l.sessionId.split('-')[0]} · ${si.label}` : l.sessionId;
-      const ds  = new Date(l.date).toLocaleDateString('no',{weekday:'short',day:'numeric',month:'short'});
+      const ds  = new Date(l.date).toLocaleDateString('no', { weekday: 'short', day: 'numeric', month: 'short' });
       return `<div class="log-entry">
         <div class="log-dot">✓</div>
         <div class="log-entry-info">
           <div class="log-entry-title">${lbl}</div>
           <div class="log-entry-meta">${ds}</div>
-          ${l.note?`<div class="log-entry-note">${l.note}</div>`:''}
+          ${l.note ? `<div class="log-entry-note">${l.note}</div>` : ''}
         </div>
-        <div class="log-feel">${fe[l.feel]||''}</div>
+        <div class="log-feel">${fe[l.feel] || ''}</div>
         <button class="log-delete" onclick="delLog('${l.id}')">✕</button>
       </div>`;
     }).join('');
 }
 
 function buildSessionSelect() {
-  const sel = document.getElementById('sel-session'), logged = loggedIds();
+  const sel    = document.getElementById('sel-session');
+  const logged = loggedIds();
   sel.innerHTML = '<option value="">Velg økt...</option>';
   PROGRAM.forEach(week => {
     const og = document.createElement('optgroup');
     og.label = `Uke ${week.week} · ${week.tag}`;
     week.sessions.forEach(s => {
       const o = document.createElement('option');
-      o.value = s.id;
-      o.textContent = `${s.label}${logged.has(s.id)?' ✓':''} – ${s.desc.slice(0,42)}…`;
+      o.value       = s.id;
+      o.textContent = `${s.label}${logged.has(s.id) ? ' ✓' : ''} – ${s.desc.slice(0, 42)}…`;
       og.appendChild(o);
     });
     sel.appendChild(og);
   });
 }
 
-// ── Exposed globals ──────────────────────────────────────────
+// ── Globals ──────────────────────────────────────────────────
 window.showView = name => {
-  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
-  document.getElementById('view-'+name).classList.add('active');
-  document.getElementById('nav-'+name).classList.add('active');
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('view-' + name).classList.add('active');
+  document.getElementById('nav-'  + name).classList.add('active');
 };
 
 window.goLog = id => {
@@ -567,39 +511,40 @@ window.goLog = id => {
 
 window.selectFeel = f => {
   selectedFeel = f;
-  ['lett','passe','tungt'].forEach(x => document.getElementById('feel-'+x).classList.toggle('selected',x===f));
+  ['lett', 'passe', 'tungt'].forEach(x =>
+    document.getElementById('feel-' + x).classList.toggle('selected', x === f));
 };
 
 window.logSession = async () => {
   const sid  = document.getElementById('sel-session').value;
   const date = document.getElementById('inp-date').value;
   const note = document.getElementById('inp-note').value.trim();
-  if (!sid)         { showToast('Velg en økt først!','#e74c3c'); return; }
-  if (!date)        { showToast('Velg en dato!','#e74c3c'); return; }
-  if (!selectedFeel){ showToast('Velg hvordan det kjentes!','#e74c3c'); return; }
-  if (loggedIds().has(sid)) { showToast('Allerede logget!','#f59e0b'); return; }
+  if (!sid)          { showToast('Velg en økt først!', '#e74c3c'); return; }
+  if (!date)         { showToast('Velg en dato!', '#e74c3c'); return; }
+  if (!selectedFeel) { showToast('Velg hvordan det kjentes!', '#e74c3c'); return; }
+  if (loggedIds().has(sid)) { showToast('Allerede logget!', '#f59e0b'); return; }
   const btn = document.getElementById('log-btn');
   btn.textContent = 'Lagrer…'; btn.disabled = true;
-  await addLog({id:Date.now().toString(), sessionId:sid, date, feel:selectedFeel, note, logged:new Date().toISOString()});
+  await addLog({ id: Date.now().toString(), sessionId: sid, date, feel: selectedFeel, note, logged: new Date().toISOString() });
   btn.textContent = '✅ \u00a0LOGG ØKTEN'; btn.disabled = false;
   document.getElementById('sel-session').value = '';
   document.getElementById('inp-note').value    = '';
   selectedFeel = '';
-  ['lett','passe','tungt'].forEach(x=>document.getElementById('feel-'+x).classList.remove('selected'));
+  ['lett', 'passe', 'tungt'].forEach(x => document.getElementById('feel-' + x).classList.remove('selected'));
   showToast('Økt logget! 💪');
 };
 
-window.delLog = async id => { await removeLog(id); showToast('Økt slettet','#888'); };
+window.delLog = async id => { await removeLog(id); showToast('Økt slettet', '#888'); };
 
-function showToast(msg, color='#22c55e') {
+function showToast(msg, color = '#22c55e') {
   const t = document.getElementById('toast');
   t.textContent = msg; t.style.background = color;
-  t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 2600);
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2600);
 }
 
 // Init
-document.getElementById('inp-date').value = new Date().toISOString().slice(0,10);
-if (!FIREBASE_READY) refreshAll(localLogs);
+document.getElementById('inp-date').value = new Date().toISOString().slice(0, 10);
 </script>
 </body>
 </html>
