@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="LFH09 Trening">
+<meta name="theme-color" content="#003087">
+<title>LFH09 J2011 · Treningslogg</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+
+<!-- ═══════════════════════════════════════════════════════════
+  FIREBASE OPPSETT – GJØR DETTE FØR DU DELER APPEN
+  ───────────────────────────────────────────────────────────
+  STEG 1: Gå til https://console.firebase.google.com
+  STEG 2: Klikk "Add project" → gi det navn f.eks. "lfh09-trening"
+  STEG 3: I prosjektet: klikk </> (Web) → registrer appen
+  STEG 4: Kopier firebaseConfig-verdiene og lim inn nedenfor
+  STEG 5: Authentication → Sign-in method → Google → Enable
+  STEG 6: Firestore Database → Create database → Production mode
+           Velg region: europe-west3 (Frankfurt)
+  STEG 7: Firestore → Rules → Erstatt innholdet med dette:
+
+    rules_version = '2';
+    service cloud.firestore {
+      match /databases/{database}/documents {
+        match /users/{userId}/logs/{logId} {
+          allow read, write: if request.auth != null
+                             && request.auth.uid == userId;
+        }
+      }
+    }
+
+  STEG 8: Publiser filen på en webserver (GitHub Pages er gratis)
+  STEG 9: I Firebase Console → Authentication → Settings →
+          Authorized domains → legg til domenet ditt
+  ═══════════════════════════════════════════════════════════ -->
+
+<style>
+:root {
+  --blue:      #003087;
+  --blue-dark: #001f5a;
+  --blue-mid:  #0044bb;
+  --red:       #C8102E;
+  --light:     #e8eef7;
+  --mid:       #c5d3ee;
+  --white:     #ffffff;
+  --off:       #f7f9fc;
+  --grey:      #8895aa;
+  --text:      #1a2540;
+  --shadow:    0 2px 16px rgba(0,48,135,0.09);
+  --r:         13px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body { height: 100%; }
+body {
+  font-family: 'Barlow', sans-serif;
+  background: var(--off); color: var(--text);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* HEADER */
+.header { background: var(--blue); padding-top: max(env(safe-area-inset-top),0px); }
+.header-inner { display:flex; align-items:center; justify-content:space-between; padding: 14px 18px 0; }
+.logo-club { font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:20px; color:var(--white); letter-spacing:1px; }
+.logo-sub  { font-family:'Barlow Condensed',sans-serif; font-size:11px; color:var(--mid); letter-spacing:2px; text-transform:uppercase; margin-top:1px; }
+.season-badge { background:var(--red); color:white; font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:11px; letter-spacing:1px; padding:4px 9px; border-radius:4px; }
+
+/* AUTH BAR */
+.auth-bar { display:flex; align-items:center; justify-content:space-between; padding:10px 18px 14px; border-bottom:1px solid rgba(255,255,255,0.08); }
+.auth-info { display:flex; align-items:center; gap:9px; }
+.auth-avatar { width:28px; height:28px; border-radius:50%; border:2px solid rgba(255,255,255,0.3); }
+.auth-name { display:block; font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:13px; color:white; }
+.auth-sub  { display:block; font-size:10px; color:var(--mid); }
+.auth-btn  { border:none; border-radius:7px; cursor:pointer; font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:12px; letter-spacing:.5px; padding:7px 12px; display:flex; align-items:center; gap:6px; transition:opacity .15s; }
+.auth-btn:hover { opacity:.85; }
+.sign-in  { background:var(--blue-mid); color:white; }
+.sign-out { background:rgba(255,255,255,0.12); color:var(--mid); }
+
+/* DEMO BANNER */
+.demo-banner { display:none; align-items:center; gap:10px; background:#fff3cd; padding:9px 16px; font-size:12px; color:#856404; line-height:1.4; border-bottom:1px solid #ffd57e; }
+
+/* NAV */
+.nav { display:flex; background:var(--blue-dark); border-bottom:3px solid var(--red); }
+.nav-btn { flex:1; padding:11px 4px; background:none; border:none; color:var(--mid); font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:12px; letter-spacing:1px; text-transform:uppercase; cursor:pointer; transition:color .2s; display:flex; flex-direction:column; align-items:center; gap:2px; border-bottom:3px solid transparent; margin-bottom:-3px; }
+.nav-btn .ni { font-size:17px; }
+.nav-btn.active { color:var(--white); border-bottom-color:var(--red); }
+
+/* MAIN */
+.main { padding:18px 15px 80px; max-width:480px; margin:0 auto; }
+.view { display:none; } .view.active { display:block; }
+.st { font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:11px; letter-spacing:2.5px; text-transform:uppercase; color:var(--grey); margin:22px 0 10px; }
+.st:first-child { margin-top:0; }
+
+/* PROGRESS HERO */
+.prog-hero { background:var(--blue); border-radius:var(--r); padding:18px; color:white; position:relative; overflow:hidden; margin-bottom:16px; }
+.prog-hero::before { content:''; position:absolute; top:-30px; right:-30px; width:130px; height:130px; border-radius:50%; background:rgba(255,255,255,.05); }
+.prog-label { font-family:'Barlow Condensed',sans-serif; font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--mid); margin-bottom:4px; }
+.prog-week  { font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:44px; line-height:1; }
+.prog-of   { font-size:16px; font-weight:400; color:var(--mid); margin-left:4px; }
+.prog-sub  { font-size:12px; color:var(--mid); margin-top:3px; }
+.prog-bar-wrap { margin-top:14px; background:rgba(255,255,255,.15); border-radius:6px; height:8px; overflow:hidden; }
+.prog-bar-fill { height:100%; background:var(--red); border-radius:6px; transition:width .8s cubic-bezier(.4,0,.2,1); }
+.prog-stats { display:flex; justify-content:space-between; margin-top:6px; }
+.prog-stat  { font-family:'Barlow Condensed',sans-serif; font-size:12px; color:var(--mid); }
+.prog-stat strong { color:white; }
+
+/* WEEK CARDS */
+.week-grid { display:flex; flex-direction:column; gap:10px; }
+.week-card { background:white; border-radius:var(--r); box-shadow:var(--shadow); overflow:hidden; }
+.week-card-header { display:flex; align-items:center; justify-content:space-between; padding:12px 15px; background:var(--light); border-bottom:2px solid var(--mid); }
+.week-card-title { font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:15px; color:var(--blue); }
+.week-card-sub { font-size:11px; color:var(--grey); margin-top:1px; }
+.week-badge { background:var(--blue); color:white; font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:12px; padding:4px 9px; border-radius:20px; }
+.week-badge.done    { background:#22c55e; }
+.week-badge.partial { background:#f59e0b; }
+.sessions { padding:9px 12px 12px; display:flex; flex-direction:column; gap:7px; }
+.session { display:flex; align-items:center; gap:10px; padding:9px 11px; background:var(--off); border-radius:9px; border:1.5px solid transparent; transition:all .2s; }
+.session.logged { background:#f0fdf4; border-color:#86efac; }
+.session-check { width:26px; height:26px; border-radius:50%; border:2px solid var(--mid); display:flex; align-items:center; justify-content:center; font-size:13px; flex-shrink:0; background:white; color:white; transition:all .2s; }
+.session.logged .session-check { background:#22c55e; border-color:#22c55e; }
+.session-info { flex:1; min-width:0; }
+.session-label { font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:13px; color:var(--text); }
+.session-desc  { font-size:11px; color:var(--grey); margin-top:1px; line-height:1.4; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.session-btn { background:var(--blue); color:white; border:none; border-radius:7px; font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:12px; padding:6px 11px; cursor:pointer; white-space:nowrap; transition:background .15s; flex-shrink:0; }
+.session-btn:hover { background:var(--blue-mid); }
+.session.logged .session-btn { background:#dcfce7; color:#15803d; }
+
+/* LOG FORM */
+.log-form-card { background:white; border-radius:var(--r); box-shadow:var(--shadow); padding:18px; margin-bottom:16px; }
+.form-label { font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:11px; letter-spacing:1px; text-transform:uppercase; color:var(--grey); margin-bottom:5px; display:block; }
+.form-select,.form-input { width:100%; padding:10px 13px; border:1.5px solid var(--mid); border-radius:9px; font-family:'Barlow',sans-serif; font-size:14px; color:var(--text); background:var(--off); margin-bottom:13px; appearance:none; -webkit-appearance:none; outline:none; transition:border-color .2s; }
+.form-select:focus,.form-input:focus { border-color:var(--blue); }
+.feel-grid { display:flex; gap:7px; margin-bottom:13px; }
+.feel-btn { flex:1; padding:11px 4px; border:2px solid var(--mid); border-radius:10px; background:var(--off); font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:12px; color:var(--grey); cursor:pointer; text-align:center; transition:all .15s; display:flex; flex-direction:column; align-items:center; gap:3px; }
+.feel-btn .fe { font-size:20px; }
+.feel-btn.selected { border-color:var(--blue); background:var(--light); color:var(--blue); }
+.submit-btn { width:100%; padding:14px; background:var(--blue); color:white; border:none; border-radius:10px; font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:16px; letter-spacing:1px; cursor:pointer; transition:background .15s,transform .1s; }
+.submit-btn:hover { background:var(--blue-mid); }
+.submit-btn:active { transform:scale(.98); }
+.submit-btn:disabled { opacity:.6; cursor:default; }
+
+/* RULE CARDS */
+.rule-cards { display:flex; flex-direction:column; gap:9px; }
+.rule-card { background:white; border-radius:var(--r); box-shadow:var(--shadow); padding:13px 15px; display:flex; align-items:flex-start; gap:13px; }
+.rule-num  { width:32px; height:32px; border-radius:8px; background:var(--blue); color:white; font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:18px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.rule-title { font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:14px; color:var(--text); margin-bottom:2px; }
+.rule-text  { font-size:12px; color:var(--grey); line-height:1.5; }
+
+/* HISTORY */
+.log-entry { background:white; border-radius:var(--r); box-shadow:var(--shadow); padding:13px 15px; display:flex; align-items:flex-start; gap:13px; margin-bottom:9px; animation:slideIn .25s ease; }
+@keyframes slideIn { from{opacity:0;transform:translateY(-6px)} to{opacity:1;transform:translateY(0)} }
+.log-dot   { width:34px; height:34px; border-radius:50%; background:var(--blue); display:flex; align-items:center; justify-content:center; font-size:15px; color:white; flex-shrink:0; }
+.log-entry-info { flex:1; min-width:0; }
+.log-entry-title { font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:14px; color:var(--text); }
+.log-entry-meta  { font-size:12px; color:var(--grey); margin-top:1px; }
+.log-entry-note  { font-size:12px; color:var(--grey); margin-top:4px; font-style:italic; line-height:1.4; }
+.log-feel  { font-size:18px; flex-shrink:0; margin-top:2px; }
+.log-delete { background:none; border:none; color:var(--mid); font-size:15px; cursor:pointer; padding:2px 4px; border-radius:4px; transition:color .15s; }
+.log-delete:hover { color:var(--red); }
+
+/* STATS */
+.moti-card { background:var(--blue); border-radius:var(--r); padding:18px; color:white; margin-bottom:15px; position:relative; overflow:hidden; }
+.moti-card::before { content:'"'; position:absolute; top:-10px; right:10px; font-size:110px; color:rgba(255,255,255,.06); font-family:Georgia,serif; line-height:1; }
+.moti-text { font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:17px; line-height:1.4; position:relative; }
+.moti-sub  { font-size:11px; color:var(--mid); margin-top:7px; position:relative; }
+.stats-grid { display:grid; grid-template-columns:1fr 1fr; gap:9px; margin-bottom:15px; }
+.stat-card  { background:white; border-radius:var(--r); box-shadow:var(--shadow); padding:15px; text-align:center; }
+.stat-num   { font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:36px; color:var(--blue); line-height:1; }
+.stat-label { font-size:11px; color:var(--grey); margin-top:2px; }
+.stat-card.red .stat-num { color:var(--red); }
+.feel-summary { background:white; border-radius:var(--r); box-shadow:var(--shadow); padding:16px; }
+.feel-row  { display:flex; align-items:center; gap:10px; margin-top:9px; }
+.feel-row:first-child { margin-top:0; }
+.fremoji { font-size:19px; width:26px; text-align:center; }
+.frbar   { flex:1; height:9px; background:var(--light); border-radius:5px; overflow:hidden; }
+.frfill  { height:100%; background:var(--blue); border-radius:5px; transition:width .6s ease; }
+.frcnt   { font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:14px; color:var(--grey); width:18px; text-align:right; }
+
+/* MISC */
+.empty { text-align:center; padding:40px 20px; color:var(--grey); }
+.empty-icon { font-size:44px; margin-bottom:9px; }
+.empty-text { font-size:14px; line-height:1.5; }
+.toast { position:fixed; bottom:80px; left:50%; transform:translateX(-50%) translateY(16px); background:#22c55e; color:white; padding:11px 22px; border-radius:28px; font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:14px; opacity:0; transition:all .28s; z-index:999; white-space:nowrap; box-shadow:0 4px 18px rgba(0,0,0,.14); pointer-events:none; }
+.toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-inner">
+    <div>
+      <div class="logo-club">LFH09 J2011</div>
+      <div class="logo-sub">Lillehammer Fåberg Håndball</div>
+    </div>
+    <div class="season-badge">2026/2027</div>
+  </div>
+  <div class="auth-bar" id="auth-bar">
+    <div class="auth-info"><span class="auth-name">Laster…</span></div>
+  </div>
+</header>
+
+<div class="demo-banner" id="demo-banner">
+  ⚠️ <div><strong>Demo-modus:</strong> Firebase ikke konfigurert. Data lagres kun lokalt på denne enheten.</div>
+</div>
+
+<nav class="nav">
+  <button class="nav-btn active" onclick="showView('program')"    id="nav-program"   ><span class="ni">📋</span>Program</button>
+  <button class="nav-btn"        onclick="showView('logg')"       id="nav-logg"      ><span class="ni">✏️</span>Logg økt</button>
+  <button class="nav-btn"        onclick="showView('historikk')"  id="nav-historikk" ><span class="ni">📅</span>Historikk</button>
+  <button class="nav-btn"        onclick="showView('statistikk')" id="nav-statistikk"><span class="ni">📊</span>Statistikk</button>
+</nav>
+
+<div class="main">
+
+  <div class="view active" id="view-program">
+    <div class="prog-hero">
+      <div class="prog-label">DIN PROGRESJON</div>
+      <div class="prog-week" id="prog-week">–<span class="prog-of"> av 6 uker</span></div>
+      <div class="prog-sub" id="prog-sub">Logg din første økt for å starte!</div>
+      <div class="prog-bar-wrap"><div class="prog-bar-fill" id="prog-bar" style="width:0%"></div></div>
+      <div class="prog-stats">
+        <div class="prog-stat"><strong id="prog-done">0</strong> fullførte økter</div>
+        <div class="prog-stat"><strong id="prog-pct">0%</strong> av programmet</div>
+      </div>
+    </div>
+    <div class="st">6-ukers program</div>
+    <div class="week-grid" id="week-grid"></div>
+  </div>
+
+  <div class="view" id="view-logg">
+    <div class="log-form-card">
+      <div class="st" style="margin-top:0">Logg en økt</div>
+      <label class="form-label">Uke og økt</label>
+      <select class="form-select" id="sel-session"></select>
+      <label class="form-label">Dato</label>
+      <input type="date" class="form-input" id="inp-date">
+      <label class="form-label">Hvordan kjentes det?</label>
+      <div class="feel-grid">
+        <button class="feel-btn" id="feel-lett"  onclick="selectFeel('lett')" ><span class="fe">😊</span>Lett</button>
+        <button class="feel-btn" id="feel-passe" onclick="selectFeel('passe')"><span class="fe">💪</span>Passe</button>
+        <button class="feel-btn" id="feel-tungt" onclick="selectFeel('tungt')"><span class="fe">😤</span>Tungt</button>
+      </div>
+      <label class="form-label">Notat (valgfritt)</label>
+      <input type="text" class="form-input" id="inp-note" placeholder="F.eks. «Løp i parken, kjentes bra»">
+      <button class="submit-btn" id="log-btn" onclick="logSession()">✅ &nbsp;LOGG ØKTEN</button>
+    </div>
+    <div class="st">Tre regler</div>
+    <div class="rule-cards">
+      <div class="rule-card"><div class="rule-num">1</div><div><div class="rule-title">Aldri hopp over to på rad</div><div class="rule-text">Én glemt økt er greit. To på rad bryter rutinen. Bare kom tilbake.</div></div></div>
+      <div class="rule-card"><div class="rule-num">2</div><div><div class="rule-title">Rolig er ikke for lett</div><div class="rule-text">Rolig jogg er selve treningen. De fleste starter for hardt og slutter for tidlig.</div></div></div>
+      <div class="rule-card"><div class="rule-num">3</div><div><div class="rule-title">Etter 6 uker er du en annen spiller</div><div class="rule-text">Kroppen din vet hva det vil si å holde på lenge – gjennom hele kampen.</div></div></div>
+    </div>
+  </div>
+
+  <div class="view" id="view-historikk">
+    <div class="st">Dine loggede økter</div>
+    <div id="history-list"></div>
+  </div>
+
+  <div class="view" id="view-statistikk">
+    <div class="moti-card">
+      <div class="moti-text" id="moti-text">Logg din første økt og se fremgangen din her!</div>
+      <div class="moti-sub">LFH09 J2011 · Lillehammer Fåberg Håndball</div>
+    </div>
+    <div class="st">Nøkkeltall</div>
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-num" id="stat-done">0</div><div class="stat-label">Fullførte økter</div></div>
+      <div class="stat-card"><div class="stat-num" id="stat-left">18</div><div class="stat-label">Gjenstår</div></div>
+      <div class="stat-card red"><div class="stat-num" id="stat-pct">0%</div><div class="stat-label">Fullført</div></div>
+      <div class="stat-card"><div class="stat-num" id="stat-days">–</div><div class="stat-label">Dager siden siste økt</div></div>
+    </div>
+    <div class="st">Hvordan har øktene kjentes?</div>
+    <div class="feel-summary">
+      <div class="feel-row"><div class="fremoji">😊</div><div class="frbar"><div class="frfill" id="feel-bar-lett"  style="width:0%"></div></div><div class="frcnt" id="feel-cnt-lett">0</div></div>
+      <div class="feel-row"><div class="fremoji">💪</div><div class="frbar"><div class="frfill" id="feel-bar-passe" style="width:0%"></div></div><div class="frcnt" id="feel-cnt-passe">0</div></div>
+      <div class="feel-row"><div class="fremoji">😤</div><div class="frbar"><div class="frfill" id="feel-bar-tungt" style="width:0%"></div></div><div class="frcnt" id="feel-cnt-tungt">0</div></div>
+    </div>
+  </div>
+
+</div>
+<div class="toast" id="toast"></div>
+
+<script type="module">
+import { initializeApp }     from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged }
+                              from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore, collection, doc, setDoc, deleteDoc, onSnapshot, query, orderBy }
+                              from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+// ▼▼▼ LIM INN DIN FIREBASE-KONFIGURASJON HER ▼▼▼
+const firebaseConfig = {
+  apiKey:            "DIN_API_KEY",
+  authDomain:        "DITT_PROSJEKT.firebaseapp.com",
+  projectId:         "DITT_PROSJEKT",
+  storageBucket:     "DITT_PROSJEKT.appspot.com",
+  messagingSenderId: "DITT_SENDER_ID",
+  appId:             "DIN_APP_ID"
+};
+// ▲▲▲ ──────────────────────────────────────── ▲▲▲
+
+const FIREBASE_READY = firebaseConfig.apiKey !== "DIN_API_KEY";
+
+let auth, db, provider, currentUser = null, unsubLogs = null;
+let localLogs = JSON.parse(localStorage.getItem('lfh-logs') || '[]');
+
+const PROGRAM = [
+  {week:1,phase:"Uke 1–2",tag:"Kom i gang",sessions:[
+    {id:"1-1",label:"Økt 1",desc:"15 min rolig jogg. Stopp og gå hvis du må."},
+    {id:"1-2",label:"Økt 2",desc:"20 min rolig jogg."},
+    {id:"1-3",label:"Økt 3",desc:"15 min rolig + 3 × 1 min litt tyngre, 2 min rolig mellom."},
+  ]},
+  {week:2,phase:"Uke 1–2",tag:"Kom i gang",sessions:[
+    {id:"2-1",label:"Økt 1",desc:"15 min rolig jogg. Stopp og gå hvis du må."},
+    {id:"2-2",label:"Økt 2",desc:"20 min rolig jogg."},
+    {id:"2-3",label:"Økt 3",desc:"15 min rolig + 3 × 1 min litt tyngre, 2 min rolig mellom."},
+  ]},
+  {week:3,phase:"Uke 3–4",tag:"Bygg videre",sessions:[
+    {id:"3-1",label:"Økt 1",desc:"25 min rolig jogg."},
+    {id:"3-2",label:"Økt 2",desc:"5 × 1 min litt tyngre, 90 sek rolig mellom."},
+    {id:"3-3",label:"Økt 3",desc:"20 min rolig + 2 min der du presser litt."},
+  ]},
+  {week:4,phase:"Uke 3–4",tag:"Bygg videre",sessions:[
+    {id:"4-1",label:"Økt 1",desc:"25 min rolig jogg."},
+    {id:"4-2",label:"Økt 2",desc:"5 × 1 min litt tyngre, 90 sek rolig mellom."},
+    {id:"4-3",label:"Økt 3",desc:"20 min rolig + 2 min der du presser litt."},
+  ]},
+  {week:5,phase:"Uke 5–6",tag:"Kampform",sessions:[
+    {id:"5-1",label:"Økt 1",desc:"30 min rolig jogg."},
+    {id:"5-2",label:"Økt 2",desc:"6 × 90 sek litt tungsett, 90 sek rolig mellom."},
+    {id:"5-3",label:"Økt 3",desc:"25 min rolig + 5 min godt tempo hele veien."},
+  ]},
+  {week:6,phase:"Uke 5–6",tag:"Kampform",sessions:[
+    {id:"6-1",label:"Økt 1",desc:"30 min rolig jogg."},
+    {id:"6-2",label:"Økt 2",desc:"6 × 90 sek litt tungsett, 90 sek rolig mellom."},
+    {id:"6-3",label:"Økt 3",desc:"25 min rolig + 5 min godt tempo hele veien."},
+  ]},
+];
+
+const MOTIS = [
+  "Logg din første økt og se fremgangen din her!",
+  "Bra start! Rutine bygges én økt av gangen.",
+  "Du er i gang – kroppen merker det allerede.",
+  "Halvveis! Du tåler mer enn du trodde.",
+  "Nesten i mål – kampformen er nær.",
+  "Siste innspurt! Du er klar for høstsesongen.",
+  "Fullført! Du møter opp til høsten som en sterkere spiller. 🏆",
+];
+
+// ── Firebase init ───────────────────────────────────────────
+if (FIREBASE_READY) {
+  const app = initializeApp(firebaseConfig);
+  auth     = getAuth(app);
+  db       = getFirestore(app);
+  provider = new GoogleAuthProvider();
+  onAuthStateChanged(auth, user => {
+    currentUser = user;
+    updateAuthUI();
+    if (user) { subscribeLogs(user.uid); }
+    else { if (unsubLogs) { unsubLogs(); unsubLogs = null; } refreshAll(localLogs); }
+  });
+} else {
+  updateAuthUI();
+  refreshAll(localLogs);
+}
+
+function subscribeLogs(uid) {
+  if (unsubLogs) unsubLogs();
+  unsubLogs = onSnapshot(
+    query(collection(db, "users", uid, "logs"), orderBy("date", "desc")),
+    snap => refreshAll(snap.docs.map(d => ({id: d.id, ...d.data()})))
+  );
+}
+
+async function addLog(entry) {
+  if (FIREBASE_READY && currentUser) {
+    const ref = doc(collection(db, "users", currentUser.uid, "logs"));
+    await setDoc(ref, {...entry, id: ref.id});
+  } else {
+    localLogs.push(entry);
+    localStorage.setItem('lfh-logs', JSON.stringify(localLogs));
+    refreshAll(localLogs);
+  }
+}
+
+async function removeLog(id) {
+  if (FIREBASE_READY && currentUser) {
+    await deleteDoc(doc(db, "users", currentUser.uid, "logs", id));
+  } else {
+    localLogs = localLogs.filter(l => l.id !== id);
+    localStorage.setItem('lfh-logs', JSON.stringify(localLogs));
+    refreshAll(localLogs);
+  }
+}
+
+// ── Auth UI ─────────────────────────────────────────────────
+function updateAuthUI() {
+  const bar  = document.getElementById('auth-bar');
+  const demo = document.getElementById('demo-banner');
+  if (!FIREBASE_READY) {
+    demo.style.display = 'flex';
+    bar.innerHTML = `<div class="auth-info"><span class="auth-name">Demo-modus</span><span class="auth-sub">Firebase ikke satt opp ennå</span></div>`;
+    return;
+  }
+  demo.style.display = 'none';
+  if (currentUser) {
+    bar.innerHTML = `
+      <div class="auth-info">
+        ${currentUser.photoURL ? `<img src="${currentUser.photoURL}" class="auth-avatar">` : ''}
+        <div><span class="auth-name">${currentUser.displayName || currentUser.email}</span>
+        <span class="auth-sub">☁️ Synkronisert med Google</span></div>
+      </div>
+      <button class="auth-btn sign-out" id="btn-signout">Logg ut</button>`;
+    document.getElementById('btn-signout').onclick = () => signOut(auth);
+  } else {
+    bar.innerHTML = `
+      <div class="auth-info"><span class="auth-name">Ikke innlogget</span><span class="auth-sub">Data lagres kun lokalt</span></div>
+      <button class="auth-btn sign-in" id="btn-signin">
+        <svg width="14" height="14" viewBox="0 0 24 24"><path fill="white" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="white" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="white" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="white" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+        Logg inn med Google
+      </button>`;
+    document.getElementById('btn-signin').onclick = () => signInWithPopup(auth, provider).catch(console.error);
+  }
+}
+
+// ── Render ───────────────────────────────────────────────────
+let currentLogs = [], selectedFeel = '';
+
+function refreshAll(logs) {
+  currentLogs = logs || [];
+  buildWeekGrid(); updateProgress(); updateStats(); buildHistory(); buildSessionSelect();
+}
+
+function loggedIds() { return new Set(currentLogs.map(l => l.sessionId)); }
+
+function buildWeekGrid() {
+  const logged = loggedIds();
+  const grid   = document.getElementById('week-grid');
+  grid.innerHTML = '';
+  PROGRAM.forEach(week => {
+    const done = week.sessions.filter(s => logged.has(s.id)).length;
+    let bc = '', bt = `${done}/${week.sessions.length}`;
+    if (done === week.sessions.length) { bc = 'done'; bt = '✓ Ferdig'; }
+    else if (done > 0) bc = 'partial';
+    const card = document.createElement('div');
+    card.className = 'week-card';
+    card.innerHTML = `
+      <div class="week-card-header">
+        <div><div class="week-card-title">Uke ${week.week} · ${week.tag}</div>
+        <div class="week-card-sub">${week.phase}</div></div>
+        <div class="week-badge ${bc}">${bt}</div>
+      </div>
+      <div class="sessions">${week.sessions.map(s => {
+        const il = logged.has(s.id);
+        return `<div class="session ${il?'logged':''}">
+          <div class="session-check">${il?'✓':''}</div>
+          <div class="session-info">
+            <div class="session-label">${s.label}</div>
+            <div class="session-desc">${s.desc}</div>
+          </div>
+          <button class="session-btn" onclick="goLog('${s.id}')">${il?'Logget ✓':'Logg'}</button>
+        </div>`;
+      }).join('')}</div>`;
+    grid.appendChild(card);
+  });
+}
+
+function updateProgress() {
+  const done = currentLogs.length, pct = Math.round(done/18*100), week = Math.min(6, Math.ceil(done/3)||0);
+  document.getElementById('prog-done').textContent = done;
+  document.getElementById('prog-bar').style.width  = pct + '%';
+  document.getElementById('prog-pct').textContent  = pct + '%';
+  if (!done) {
+    document.getElementById('prog-week').innerHTML = '–<span class="prog-of"> av 6 uker</span>';
+    document.getElementById('prog-sub').textContent = 'Logg din første økt for å starte!';
+  } else if (done >= 18) {
+    document.getElementById('prog-week').innerHTML = '6<span class="prog-of"> uker ✓</span>';
+    document.getElementById('prog-sub').textContent = 'Hele programmet fullført! 🎉';
+  } else {
+    document.getElementById('prog-week').innerHTML = `${week}<span class="prog-of"> av 6 uker</span>`;
+    document.getElementById('prog-sub').textContent = `${pct}% fullført – fortsett jobben!`;
+  }
+}
+
+function updateStats() {
+  const done = currentLogs.length;
+  document.getElementById('stat-done').textContent = done;
+  document.getElementById('stat-left').textContent = Math.max(0, 18-done);
+  document.getElementById('stat-pct').textContent  = Math.round(done/18*100)+'%';
+  if (done) {
+    const latest = [...currentLogs].sort((a,b)=>new Date(b.date)-new Date(a.date))[0];
+    document.getElementById('stat-days').textContent =
+      Math.round((new Date().setHours(0,0,0,0) - new Date(latest.date)) / 86400000);
+  }
+  const c = {lett:0,passe:0,tungt:0};
+  currentLogs.forEach(l => { if (c[l.feel]!==undefined) c[l.feel]++; });
+  const mx = Math.max(1,...Object.values(c));
+  ['lett','passe','tungt'].forEach(f => {
+    document.getElementById(`feel-cnt-${f}`).textContent     = c[f];
+    document.getElementById(`feel-bar-${f}`).style.width     = (c[f]/mx*100)+'%';
+  });
+  document.getElementById('moti-text').textContent = MOTIS[Math.min(Math.floor(done/3), MOTIS.length-1)];
+}
+
+function buildHistory() {
+  const list = document.getElementById('history-list');
+  if (!currentLogs.length) {
+    list.innerHTML = `<div class="empty"><div class="empty-icon">📋</div><div class="empty-text">Ingen økter logget ennå.<br>Gå til «Logg økt» for å starte!</div></div>`;
+    return;
+  }
+  const fe = {lett:'😊',passe:'💪',tungt:'😤'};
+  list.innerHTML = [...currentLogs]
+    .sort((a,b)=>new Date(b.date)-new Date(a.date))
+    .map(l => {
+      const si  = PROGRAM.flatMap(w=>w.sessions).find(s=>s.id===l.sessionId);
+      const lbl = si ? `Uke ${l.sessionId.split('-')[0]} · ${si.label}` : l.sessionId;
+      const ds  = new Date(l.date).toLocaleDateString('no',{weekday:'short',day:'numeric',month:'short'});
+      return `<div class="log-entry">
+        <div class="log-dot">✓</div>
+        <div class="log-entry-info">
+          <div class="log-entry-title">${lbl}</div>
+          <div class="log-entry-meta">${ds}</div>
+          ${l.note?`<div class="log-entry-note">${l.note}</div>`:''}
+        </div>
+        <div class="log-feel">${fe[l.feel]||''}</div>
+        <button class="log-delete" onclick="delLog('${l.id}')">✕</button>
+      </div>`;
+    }).join('');
+}
+
+function buildSessionSelect() {
+  const sel = document.getElementById('sel-session'), logged = loggedIds();
+  sel.innerHTML = '<option value="">Velg økt...</option>';
+  PROGRAM.forEach(week => {
+    const og = document.createElement('optgroup');
+    og.label = `Uke ${week.week} · ${week.tag}`;
+    week.sessions.forEach(s => {
+      const o = document.createElement('option');
+      o.value = s.id;
+      o.textContent = `${s.label}${logged.has(s.id)?' ✓':''} – ${s.desc.slice(0,42)}…`;
+      og.appendChild(o);
+    });
+    sel.appendChild(og);
+  });
+}
+
+// ── Exposed globals ──────────────────────────────────────────
+window.showView = name => {
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('view-'+name).classList.add('active');
+  document.getElementById('nav-'+name).classList.add('active');
+};
+
+window.goLog = id => {
+  showView('logg');
+  document.getElementById('sel-session').value = id;
+};
+
+window.selectFeel = f => {
+  selectedFeel = f;
+  ['lett','passe','tungt'].forEach(x => document.getElementById('feel-'+x).classList.toggle('selected',x===f));
+};
+
+window.logSession = async () => {
+  const sid  = document.getElementById('sel-session').value;
+  const date = document.getElementById('inp-date').value;
+  const note = document.getElementById('inp-note').value.trim();
+  if (!sid)         { showToast('Velg en økt først!','#e74c3c'); return; }
+  if (!date)        { showToast('Velg en dato!','#e74c3c'); return; }
+  if (!selectedFeel){ showToast('Velg hvordan det kjentes!','#e74c3c'); return; }
+  if (loggedIds().has(sid)) { showToast('Allerede logget!','#f59e0b'); return; }
+  const btn = document.getElementById('log-btn');
+  btn.textContent = 'Lagrer…'; btn.disabled = true;
+  await addLog({id:Date.now().toString(), sessionId:sid, date, feel:selectedFeel, note, logged:new Date().toISOString()});
+  btn.textContent = '✅ \u00a0LOGG ØKTEN'; btn.disabled = false;
+  document.getElementById('sel-session').value = '';
+  document.getElementById('inp-note').value    = '';
+  selectedFeel = '';
+  ['lett','passe','tungt'].forEach(x=>document.getElementById('feel-'+x).classList.remove('selected'));
+  showToast('Økt logget! 💪');
+};
+
+window.delLog = async id => { await removeLog(id); showToast('Økt slettet','#888'); };
+
+function showToast(msg, color='#22c55e') {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.style.background = color;
+  t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 2600);
+}
+
+// Init
+document.getElementById('inp-date').value = new Date().toISOString().slice(0,10);
+if (!FIREBASE_READY) refreshAll(localLogs);
+</script>
+</body>
+</html>
