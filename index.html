@@ -232,7 +232,6 @@ import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChang
 import { getFirestore, collection, doc, setDoc, deleteDoc, onSnapshot, query, orderBy }
                               from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-// ── Firebase konfigurasjon ──────────────────────────────────
 const firebaseConfig = {
   apiKey:            "AIzaSyA_TbOi0heY4JrB-Ly6VnI5Tk0N3pufB40",
   authDomain:        "lfh09j2011sommerlog.firebaseapp.com",
@@ -242,17 +241,14 @@ const firebaseConfig = {
   appId:             "1:207901704516:web:fb67d00fa340298fa59711"
 };
 
-// ── Init (én gang) ──────────────────────────────────────────
 const app      = initializeApp(firebaseConfig);
 const auth     = getAuth(app);
 const db       = getFirestore(app);
 const provider = new GoogleAuthProvider();
 
-let currentUser = null;
-let unsubLogs   = null;
-let localLogs   = JSON.parse(localStorage.getItem('lfh-logs') || '[]');
+let currentUser = null, unsubLogs = null;
+let localLogs = JSON.parse(localStorage.getItem('lfh-logs') || '[]');
 
-// ── Program ─────────────────────────────────────────────────
 const PROGRAM = [
   {week:1,phase:"Uke 1–2",tag:"Kom i gang",sessions:[
     {id:"1-1",label:"Økt 1",desc:"15 min rolig jogg. Stopp og gå hvis du må."},
@@ -296,16 +292,11 @@ const MOTIS = [
   "Fullført! Du møter opp til høsten som en sterkere spiller. 🏆",
 ];
 
-// ── Auth ────────────────────────────────────────────────────
 onAuthStateChanged(auth, user => {
   currentUser = user;
   updateAuthUI();
-  if (user) {
-    subscribeLogs(user.uid);
-  } else {
-    if (unsubLogs) { unsubLogs(); unsubLogs = null; }
-    refreshAll(localLogs);
-  }
+  if (user) { subscribeLogs(user.uid); }
+  else { if (unsubLogs) { unsubLogs(); unsubLogs = null; } refreshAll(localLogs); }
 });
 
 function subscribeLogs(uid) {
@@ -338,9 +329,8 @@ async function removeLog(id) {
 }
 
 function updateAuthUI() {
-  const bar  = document.getElementById('auth-bar');
-  const demo = document.getElementById('demo-banner');
-  demo.style.display = 'none';
+  const bar = document.getElementById('auth-bar');
+  document.getElementById('demo-banner').style.display = 'none';
   if (currentUser) {
     bar.innerHTML = `
       <div class="auth-info">
@@ -372,7 +362,6 @@ function updateAuthUI() {
   }
 }
 
-// ── Render ───────────────────────────────────────────────────
 let currentLogs = [], selectedFeel = '';
 
 function refreshAll(logs) {
@@ -384,7 +373,7 @@ function loggedIds() { return new Set(currentLogs.map(l => l.sessionId)); }
 
 function buildWeekGrid() {
   const logged = loggedIds();
-  const grid   = document.getElementById('week-grid');
+  const grid = document.getElementById('week-grid');
   grid.innerHTML = '';
   PROGRAM.forEach(week => {
     const done = week.sessions.filter(s => logged.has(s.id)).length;
@@ -480,7 +469,7 @@ function buildHistory() {
 }
 
 function buildSessionSelect() {
-  const sel    = document.getElementById('sel-session');
+  const sel = document.getElementById('sel-session');
   const logged = loggedIds();
   sel.innerHTML = '<option value="">Velg økt...</option>';
   PROGRAM.forEach(week => {
@@ -488,7 +477,7 @@ function buildSessionSelect() {
     og.label = `Uke ${week.week} · ${week.tag}`;
     week.sessions.forEach(s => {
       const o = document.createElement('option');
-      o.value       = s.id;
+      o.value = s.id;
       o.textContent = `${s.label}${logged.has(s.id) ? ' ✓' : ''} – ${s.desc.slice(0, 42)}…`;
       og.appendChild(o);
     });
@@ -496,7 +485,6 @@ function buildSessionSelect() {
   });
 }
 
-// ── Globals ──────────────────────────────────────────────────
 window.showView = name => {
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
@@ -543,7 +531,6 @@ function showToast(msg, color = '#22c55e') {
   setTimeout(() => t.classList.remove('show'), 2600);
 }
 
-// Init
 document.getElementById('inp-date').value = new Date().toISOString().slice(0, 10);
 </script>
 </body>
