@@ -27,6 +27,8 @@
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 html, body { height: 100%; }
 body { font-family: 'Barlow', sans-serif; background: var(--off); color: var(--text); padding-bottom: env(safe-area-inset-bottom); }
+
+/* HEADER */
 .header { background: var(--blue); padding-top: max(env(safe-area-inset-top),0px); }
 .header-inner { display:flex; align-items:center; justify-content:space-between; padding: 14px 18px 0; }
 .logo-club { font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:20px; color:var(--white); letter-spacing:1px; }
@@ -41,16 +43,39 @@ body { font-family: 'Barlow', sans-serif; background: var(--off); color: var(--t
 .auth-btn:hover { opacity:.85; }
 .sign-in  { background:var(--blue-mid); color:white; }
 .sign-out { background:rgba(255,255,255,0.12); color:var(--mid); }
-.demo-banner { display:none; align-items:center; gap:10px; background:#fff3cd; padding:9px 16px; font-size:12px; color:#856404; line-height:1.4; border-bottom:1px solid #ffd57e; }
+
+/* NAV */
 .nav { display:flex; background:var(--blue-dark); border-bottom:3px solid var(--red); }
 .nav-btn { flex:1; padding:11px 4px; background:none; border:none; color:var(--mid); font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:12px; letter-spacing:1px; text-transform:uppercase; cursor:pointer; transition:color .2s; display:flex; flex-direction:column; align-items:center; gap:2px; border-bottom:3px solid transparent; margin-bottom:-3px; }
 .nav-btn .ni { font-size:17px; }
 .nav-btn.active { color:var(--white); border-bottom-color:var(--red); }
+
+/* MAIN */
 .main { padding:18px 15px 80px; max-width:480px; margin:0 auto; }
 .view { display:none; } .view.active { display:block; }
 .st { font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:11px; letter-spacing:2.5px; text-transform:uppercase; color:var(--grey); margin:22px 0 10px; }
 .st:first-child { margin-top:0; }
-.prog-hero { background:var(--blue); border-radius:var(--r); padding:18px; color:white; position:relative; overflow:hidden; margin-bottom:16px; }
+
+/* STREAK CARD */
+.streak-card {
+  background: linear-gradient(135deg, #ff6b00, #ff9500);
+  border-radius: var(--r); padding: 16px 18px;
+  color: white; margin-bottom: 12px;
+  display: flex; align-items: center; gap: 14px;
+  box-shadow: 0 4px 20px rgba(255,107,0,0.3);
+  animation: streakPulse 3s ease-in-out infinite;
+}
+@keyframes streakPulse {
+  0%,100% { box-shadow: 0 4px 20px rgba(255,107,0,0.3); }
+  50%      { box-shadow: 0 4px 28px rgba(255,107,0,0.5); }
+}
+.streak-fire { font-size: 38px; line-height: 1; }
+.streak-num  { font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:36px; line-height:1; }
+.streak-label { font-size:12px; opacity:0.9; margin-top:2px; }
+.streak-msg  { font-size:12px; opacity:0.85; margin-top:4px; font-style:italic; }
+
+/* PROGRESS HERO */
+.prog-hero { background:var(--blue); border-radius:var(--r); padding:18px; color:white; position:relative; overflow:hidden; margin-bottom:12px; }
 .prog-hero::before { content:''; position:absolute; top:-30px; right:-30px; width:130px; height:130px; border-radius:50%; background:rgba(255,255,255,.05); }
 .prog-label { font-family:'Barlow Condensed',sans-serif; font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--mid); margin-bottom:4px; }
 .prog-week  { font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:44px; line-height:1; }
@@ -61,6 +86,21 @@ body { font-family: 'Barlow', sans-serif; background: var(--off); color: var(--t
 .prog-stats { display:flex; justify-content:space-between; margin-top:6px; }
 .prog-stat  { font-family:'Barlow Condensed',sans-serif; font-size:12px; color:var(--mid); }
 .prog-stat strong { color:white; }
+
+/* LAG CARD */
+.lag-card {
+  background: white; border-radius: var(--r); box-shadow: var(--shadow);
+  padding: 15px 18px; margin-bottom: 12px;
+}
+.lag-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
+.lag-title { font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:14px; color:var(--blue); letter-spacing:.5px; }
+.lag-count { font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:13px; color:var(--grey); }
+.lag-bar-wrap { background:var(--light); border-radius:6px; height:10px; overflow:hidden; margin-bottom:8px; }
+.lag-bar-fill { height:100%; background:linear-gradient(90deg, var(--blue), var(--blue-mid)); border-radius:6px; transition:width 1s ease; }
+.lag-sub { font-size:11px; color:var(--grey); }
+.lag-sub strong { color:var(--blue); }
+
+/* WEEK CARDS */
 .week-grid { display:flex; flex-direction:column; gap:10px; }
 .week-card { background:white; border-radius:var(--r); box-shadow:var(--shadow); overflow:hidden; }
 .week-card-header { display:flex; align-items:center; justify-content:space-between; padding:12px 15px; background:var(--light); border-bottom:2px solid var(--mid); }
@@ -80,6 +120,8 @@ body { font-family: 'Barlow', sans-serif; background: var(--off); color: var(--t
 .session-btn { background:var(--blue); color:white; border:none; border-radius:7px; font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:12px; padding:6px 11px; cursor:pointer; white-space:nowrap; transition:background .15s; flex-shrink:0; }
 .session-btn:hover { background:var(--blue-mid); }
 .session.logged .session-btn { background:#dcfce7; color:#15803d; }
+
+/* LOG FORM */
 .log-form-card { background:white; border-radius:var(--r); box-shadow:var(--shadow); padding:18px; margin-bottom:16px; }
 .form-label { font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:11px; letter-spacing:1px; text-transform:uppercase; color:var(--grey); margin-bottom:5px; display:block; }
 .form-select,.form-input { width:100%; padding:10px 13px; border:1.5px solid var(--mid); border-radius:9px; font-family:'Barlow',sans-serif; font-size:14px; color:var(--text); background:var(--off); margin-bottom:13px; appearance:none; -webkit-appearance:none; outline:none; transition:border-color .2s; }
@@ -92,11 +134,15 @@ body { font-family: 'Barlow', sans-serif; background: var(--off); color: var(--t
 .submit-btn:hover { background:var(--blue-mid); }
 .submit-btn:active { transform:scale(.98); }
 .submit-btn:disabled { opacity:.6; cursor:default; }
+
+/* RULE CARDS */
 .rule-cards { display:flex; flex-direction:column; gap:9px; }
 .rule-card { background:white; border-radius:var(--r); box-shadow:var(--shadow); padding:13px 15px; display:flex; align-items:flex-start; gap:13px; }
 .rule-num  { width:32px; height:32px; border-radius:8px; background:var(--blue); color:white; font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:18px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
 .rule-title { font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:14px; color:var(--text); margin-bottom:2px; }
 .rule-text  { font-size:12px; color:var(--grey); line-height:1.5; }
+
+/* HISTORY */
 .log-entry { background:white; border-radius:var(--r); box-shadow:var(--shadow); padding:13px 15px; display:flex; align-items:flex-start; gap:13px; margin-bottom:9px; animation:slideIn .25s ease; }
 @keyframes slideIn { from{opacity:0;transform:translateY(-6px)} to{opacity:1;transform:translateY(0)} }
 .log-dot   { width:34px; height:34px; border-radius:50%; background:var(--blue); display:flex; align-items:center; justify-content:center; font-size:15px; color:white; flex-shrink:0; }
@@ -107,6 +153,8 @@ body { font-family: 'Barlow', sans-serif; background: var(--off); color: var(--t
 .log-feel  { font-size:18px; flex-shrink:0; margin-top:2px; }
 .log-delete { background:none; border:none; color:var(--mid); font-size:15px; cursor:pointer; padding:2px 4px; border-radius:4px; transition:color .15s; }
 .log-delete:hover { color:var(--red); }
+
+/* STATS */
 .moti-card { background:var(--blue); border-radius:var(--r); padding:18px; color:white; margin-bottom:15px; position:relative; overflow:hidden; }
 .moti-card::before { content:'"'; position:absolute; top:-10px; right:10px; font-size:110px; color:rgba(255,255,255,.06); font-family:Georgia,serif; line-height:1; }
 .moti-text { font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:17px; line-height:1.4; position:relative; }
@@ -116,6 +164,7 @@ body { font-family: 'Barlow', sans-serif; background: var(--off); color: var(--t
 .stat-num   { font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:36px; color:var(--blue); line-height:1; }
 .stat-label { font-size:11px; color:var(--grey); margin-top:2px; }
 .stat-card.red .stat-num { color:var(--red); }
+.stat-card.fire .stat-num { color:#ff6b00; }
 .feel-summary { background:white; border-radius:var(--r); box-shadow:var(--shadow); padding:16px; }
 .feel-row  { display:flex; align-items:center; gap:10px; margin-top:9px; }
 .feel-row:first-child { margin-top:0; }
@@ -123,14 +172,52 @@ body { font-family: 'Barlow', sans-serif; background: var(--off); color: var(--t
 .frbar   { flex:1; height:9px; background:var(--light); border-radius:5px; overflow:hidden; }
 .frfill  { height:100%; background:var(--blue); border-radius:5px; transition:width .6s ease; }
 .frcnt   { font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:14px; color:var(--grey); width:18px; text-align:right; }
+
+/* MISC */
 .empty { text-align:center; padding:40px 20px; color:var(--grey); }
 .empty-icon { font-size:44px; margin-bottom:9px; }
 .empty-text { font-size:14px; line-height:1.5; }
 .toast { position:fixed; bottom:80px; left:50%; transform:translateX(-50%) translateY(16px); background:#22c55e; color:white; padding:11px 22px; border-radius:28px; font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:14px; opacity:0; transition:all .28s; z-index:999; white-space:nowrap; box-shadow:0 4px 18px rgba(0,0,0,.14); pointer-events:none; }
 .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+
+/* KONFETTI */
+#konfetti-canvas { position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:9999; }
+
+/* FEIRING OVERLAY */
+.feiring {
+  position: fixed; inset: 0; z-index: 1000;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(0,0,0,0.5);
+  opacity: 0; pointer-events: none;
+  transition: opacity .3s;
+}
+.feiring.show { opacity: 1; pointer-events: all; }
+.feiring-box {
+  background: white; border-radius: 20px; padding: 32px 28px;
+  text-align: center; max-width: 300px; width: 90%;
+  transform: scale(0.8); transition: transform .3s cubic-bezier(.34,1.56,.64,1);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+}
+.feiring.show .feiring-box { transform: scale(1); }
+.feiring-emoji { font-size: 56px; margin-bottom: 12px; display: block; }
+.feiring-title { font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:26px; color:var(--blue); margin-bottom:6px; }
+.feiring-sub { font-size:14px; color:var(--grey); line-height:1.5; margin-bottom:20px; }
+.feiring-btn { background:var(--blue); color:white; border:none; border-radius:10px; font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:15px; padding:12px 28px; cursor:pointer; width:100%; }
 </style>
 </head>
 <body>
+
+<canvas id="konfetti-canvas"></canvas>
+
+<!-- FEIRING OVERLAY -->
+<div class="feiring" id="feiring">
+  <div class="feiring-box">
+    <span class="feiring-emoji" id="feiring-emoji">🎉</span>
+    <div class="feiring-title" id="feiring-title">Bra jobba!</div>
+    <div class="feiring-sub" id="feiring-sub">Du er et skritt nærmere kampform!</div>
+    <button class="feiring-btn" onclick="lukkFeiring()">Fortsett 💪</button>
+  </div>
+</div>
 
 <header class="header">
   <div class="header-inner">
@@ -145,10 +232,6 @@ body { font-family: 'Barlow', sans-serif; background: var(--off); color: var(--t
   </div>
 </header>
 
-<div class="demo-banner" id="demo-banner">
-  ⚠️ <div><strong>Demo-modus:</strong> Firebase ikke konfigurert. Data lagres kun lokalt på denne enheten.</div>
-</div>
-
 <nav class="nav">
   <button class="nav-btn active" onclick="showView('program')"    id="nav-program"   ><span class="ni">📋</span>Program</button>
   <button class="nav-btn"        onclick="showView('logg')"       id="nav-logg"      ><span class="ni">✏️</span>Logg økt</button>
@@ -157,7 +240,10 @@ body { font-family: 'Barlow', sans-serif; background: var(--off); color: var(--t
 </nav>
 
 <div class="main">
+
+  <!-- PROGRAM -->
   <div class="view active" id="view-program">
+    <div id="streak-wrap"></div>
     <div class="prog-hero">
       <div class="prog-label">DIN PROGRESJON</div>
       <div class="prog-week" id="prog-week">–<span class="prog-of"> av 6 uker</span></div>
@@ -168,10 +254,12 @@ body { font-family: 'Barlow', sans-serif; background: var(--off); color: var(--t
         <div class="prog-stat"><strong id="prog-pct">0%</strong> av programmet</div>
       </div>
     </div>
+    <div id="lag-wrap"></div>
     <div class="st">6-ukers program</div>
     <div class="week-grid" id="week-grid"></div>
   </div>
 
+  <!-- LOGG -->
   <div class="view" id="view-logg">
     <div class="log-form-card">
       <div class="st" style="margin-top:0">Logg en økt</div>
@@ -197,11 +285,13 @@ body { font-family: 'Barlow', sans-serif; background: var(--off); color: var(--t
     </div>
   </div>
 
+  <!-- HISTORIKK -->
   <div class="view" id="view-historikk">
     <div class="st">Dine loggede økter</div>
     <div id="history-list"></div>
   </div>
 
+  <!-- STATISTIKK -->
   <div class="view" id="view-statistikk">
     <div class="moti-card">
       <div class="moti-text" id="moti-text">Logg din første økt og se fremgangen din her!</div>
@@ -212,7 +302,7 @@ body { font-family: 'Barlow', sans-serif; background: var(--off); color: var(--t
       <div class="stat-card"><div class="stat-num" id="stat-done">0</div><div class="stat-label">Fullførte økter</div></div>
       <div class="stat-card"><div class="stat-num" id="stat-left">18</div><div class="stat-label">Gjenstår</div></div>
       <div class="stat-card red"><div class="stat-num" id="stat-pct">0%</div><div class="stat-label">Fullført</div></div>
-      <div class="stat-card"><div class="stat-num" id="stat-days">–</div><div class="stat-label">Dager siden siste økt</div></div>
+      <div class="stat-card fire"><div class="stat-num" id="stat-streak">0🔥</div><div class="stat-label">Dagers streak</div></div>
     </div>
     <div class="st">Hvordan har øktene kjentes?</div>
     <div class="feel-summary">
@@ -221,17 +311,18 @@ body { font-family: 'Barlow', sans-serif; background: var(--off); color: var(--t
       <div class="feel-row"><div class="fremoji">😤</div><div class="frbar"><div class="frfill" id="feel-bar-tungt" style="width:0%"></div></div><div class="frcnt" id="feel-cnt-tungt">0</div></div>
     </div>
   </div>
-</div>
 
+</div>
 <div class="toast" id="toast"></div>
 
 <script type="module">
 import { initializeApp }     from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged }
                               from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getFirestore, collection, doc, setDoc, deleteDoc, onSnapshot, query, orderBy }
+import { getFirestore, collection, doc, setDoc, deleteDoc, onSnapshot, query, orderBy, getDoc, setDoc as fsSet }
                               from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
+// ── Firebase config ─────────────────────────────────────────
 const firebaseConfig = {
   apiKey:            "AIzaSyA_TbOi0heY4JrB-Ly6VnI5Tk0N3pufB40",
   authDomain:        "lfh09j2011sommerlog.firebaseapp.com",
@@ -247,8 +338,9 @@ const db       = getFirestore(app);
 const provider = new GoogleAuthProvider();
 
 let currentUser = null, unsubLogs = null;
-let localLogs = JSON.parse(localStorage.getItem('lfh-logs') || '[]');
+let localLogs   = JSON.parse(localStorage.getItem('lfh-logs') || '[]');
 
+// ── Program data ────────────────────────────────────────────
 const PROGRAM = [
   {week:1,phase:"Uke 1–2",tag:"Kom i gang",sessions:[
     {id:"1-1",label:"Økt 1",desc:"15 min rolig jogg. Stopp og gå hvis du må."},
@@ -292,11 +384,138 @@ const MOTIS = [
   "Fullført! Du møter opp til høsten som en sterkere spiller. 🏆",
 ];
 
+const STREAK_MSGS = [
+  "", // 0
+  "Du har begynt – det er det viktigste! 🌱",
+  "To dager på rad – rutinen starter her!",
+  "Tre dager! Du bygger en vane nå 🔥",
+  "Fire dager på rad – dette er imponerende!",
+  "FEM dager! Du er i en fantastisk groove 🔥🔥",
+  "Seks dager på rad – du er ustoppelig!",
+  "EN UKE! Kroppen din takker deg 🏆",
+];
+
+// ── Konfetti ────────────────────────────────────────────────
+function startKonfetti(sekunder = 3) {
+  const canvas = document.getElementById('konfetti-canvas');
+  const ctx    = canvas.getContext('2d');
+  canvas.width  = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const farger  = ['#003087','#C8102E','#ffd700','#22c55e','#ff6b00','#a855f7'];
+  const partikler = Array.from({length: 120}, () => ({
+    x:  Math.random() * canvas.width,
+    y:  Math.random() * canvas.height - canvas.height,
+    w:  Math.random() * 10 + 5,
+    h:  Math.random() * 6 + 3,
+    farge: farger[Math.floor(Math.random() * farger.length)],
+    rot:   Math.random() * Math.PI * 2,
+    rotV:  (Math.random() - 0.5) * 0.2,
+    vx:    (Math.random() - 0.5) * 3,
+    vy:    Math.random() * 4 + 2,
+    alpha: 1,
+  }));
+
+  const slutt = Date.now() + sekunder * 1000;
+  function tegn() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const gjennstaar = slutt - Date.now();
+    partikler.forEach(p => {
+      p.x  += p.vx;
+      p.y  += p.vy;
+      p.rot += p.rotV;
+      if (gjennstaar < 800) p.alpha = Math.max(0, gjennstaar / 800);
+      ctx.save();
+      ctx.globalAlpha = p.alpha;
+      ctx.translate(p.x + p.w / 2, p.y + p.h / 2);
+      ctx.rotate(p.rot);
+      ctx.fillStyle = p.farge;
+      ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+      ctx.restore();
+      if (p.y > canvas.height) { p.y = -10; p.x = Math.random() * canvas.width; }
+    });
+    if (Date.now() < slutt) requestAnimationFrame(tegn);
+    else ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+  tegn();
+}
+
+// ── Feiring ──────────────────────────────────────────────────
+function visFeiring(emoji, tittel, sub, konfetti = true) {
+  document.getElementById('feiring-emoji').textContent = emoji;
+  document.getElementById('feiring-title').textContent = tittel;
+  document.getElementById('feiring-sub').textContent   = sub;
+  document.getElementById('feiring').classList.add('show');
+  if (konfetti) startKonfetti(4);
+}
+
+window.lukkFeiring = () => {
+  document.getElementById('feiring').classList.remove('show');
+};
+
+// ── Streak beregning ─────────────────────────────────────────
+function beregnStreak(logs) {
+  if (!logs.length) return 0;
+  const datoer = [...new Set(logs.map(l => l.date))].sort().reverse();
+  const today  = new Date().toISOString().slice(0, 10);
+  if (datoer[0] !== today && datoer[0] !== igar()) return 0;
+  let streak = 1;
+  for (let i = 1; i < datoer.length; i++) {
+    const diff = (new Date(datoer[i-1]) - new Date(datoer[i])) / 86400000;
+    if (diff === 1) streak++;
+    else break;
+  }
+  return streak;
+}
+
+function igar() {
+  const d = new Date(); d.setDate(d.getDate() - 1);
+  return d.toISOString().slice(0, 10);
+}
+
+// ── Lag-statistikk (anonymt) ─────────────────────────────────
+const LAG_STORRELSE = 14;
+
+async function oppdaterLagStats(uid) {
+  if (!uid) return;
+  const uke = getIsoUke();
+  const ref = doc(db, "lagstats", uke, "aktive", uid);
+  await setDoc(ref, { uid, uke, ts: new Date().toISOString() });
+}
+
+async function hentLagStats() {
+  if (!currentUser) return null;
+  try {
+    const uke  = getIsoUke();
+    const snap = await getDoc(doc(db, "lagstats", uke));
+    // teller antall dokumenter i subkollektion via snapshot
+    const { getDocs } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
+    const col  = collection(db, "lagstats", uke, "aktive");
+    const alle = await getDocs(col);
+    return alle.size;
+  } catch(e) { return null; }
+}
+
+function getIsoUke() {
+  const d = new Date();
+  const dag = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+  const dagNr = (dag.getUTCDay() + 6) % 7;
+  dag.setUTCDate(dag.getUTCDate() - dagNr + 3);
+  const forsteTorstdag = new Date(Date.UTC(dag.getUTCFullYear(), 0, 4));
+  const ukeNr = 1 + Math.round(((dag - forsteTorstdag) / 86400000 - 3 + (forsteTorstdag.getUTCDay() + 6) % 7) / 7);
+  return `${dag.getUTCFullYear()}-W${String(ukeNr).padStart(2,'0')}`;
+}
+
+// ── Auth ─────────────────────────────────────────────────────
 onAuthStateChanged(auth, user => {
   currentUser = user;
   updateAuthUI();
-  if (user) { subscribeLogs(user.uid); }
-  else { if (unsubLogs) { unsubLogs(); unsubLogs = null; } refreshAll(localLogs); }
+  if (user) {
+    subscribeLogs(user.uid);
+  } else {
+    if (unsubLogs) { unsubLogs(); unsubLogs = null; }
+    refreshAll(localLogs);
+  }
 });
 
 function subscribeLogs(uid) {
@@ -311,6 +530,7 @@ async function addLog(entry) {
   if (currentUser) {
     const ref = doc(collection(db, "users", currentUser.uid, "logs"));
     await setDoc(ref, { ...entry, id: ref.id });
+    await oppdaterLagStats(currentUser.uid);
   } else {
     localLogs.push(entry);
     localStorage.setItem('lfh-logs', JSON.stringify(localLogs));
@@ -330,7 +550,6 @@ async function removeLog(id) {
 
 function updateAuthUI() {
   const bar = document.getElementById('auth-bar');
-  document.getElementById('demo-banner').style.display = 'none';
   if (currentUser) {
     bar.innerHTML = `
       <div class="auth-info">
@@ -362,18 +581,61 @@ function updateAuthUI() {
   }
 }
 
+// ── Render ───────────────────────────────────────────────────
 let currentLogs = [], selectedFeel = '';
 
-function refreshAll(logs) {
+async function refreshAll(logs) {
   currentLogs = logs || [];
-  buildWeekGrid(); updateProgress(); updateStats(); buildHistory(); buildSessionSelect();
+  buildWeekGrid();
+  updateProgress();
+  updateStats();
+  buildHistory();
+  buildSessionSelect();
+  buildStreakCard();
+  await buildLagCard();
 }
 
 function loggedIds() { return new Set(currentLogs.map(l => l.sessionId)); }
 
+function buildStreakCard() {
+  const streak = beregnStreak(currentLogs);
+  const wrap   = document.getElementById('streak-wrap');
+  if (streak < 1) { wrap.innerHTML = ''; return; }
+  const msg = STREAK_MSGS[Math.min(streak, STREAK_MSGS.length - 1)];
+  const brann = streak >= 7 ? '🔥🔥🔥' : streak >= 5 ? '🔥🔥' : '🔥';
+  wrap.innerHTML = `
+    <div class="streak-card">
+      <div class="streak-fire">${brann}</div>
+      <div>
+        <div class="streak-num">${streak} dager på rad!</div>
+        <div class="streak-label">Aktiv streak</div>
+        ${msg ? `<div class="streak-msg">${msg}</div>` : ''}
+      </div>
+    </div>`;
+}
+
+async function buildLagCard() {
+  const wrap = document.getElementById('lag-wrap');
+  if (!currentUser) { wrap.innerHTML = ''; return; }
+  const antall = await hentLagStats();
+  if (antall === null) { wrap.innerHTML = ''; return; }
+  const pct = Math.round(antall / LAG_STORRELSE * 100);
+  wrap.innerHTML = `
+    <div class="lag-card">
+      <div class="lag-header">
+        <div class="lag-title">🏐 LAGETS UKE</div>
+        <div class="lag-count">${antall} av ${LAG_STORRELSE}</div>
+      </div>
+      <div class="lag-bar-wrap">
+        <div class="lag-bar-fill" style="width:${pct}%"></div>
+      </div>
+      <div class="lag-sub"><strong>${antall} jenter</strong> har logget økt denne uken – er du en av dem?</div>
+    </div>`;
+}
+
 function buildWeekGrid() {
   const logged = loggedIds();
-  const grid = document.getElementById('week-grid');
+  const grid   = document.getElementById('week-grid');
   grid.innerHTML = '';
   PROGRAM.forEach(week => {
     const done = week.sessions.filter(s => logged.has(s.id)).length;
@@ -423,15 +685,13 @@ function updateProgress() {
 }
 
 function updateStats() {
-  const done = currentLogs.length;
-  document.getElementById('stat-done').textContent = done;
-  document.getElementById('stat-left').textContent = Math.max(0, 18 - done);
-  document.getElementById('stat-pct').textContent  = Math.round(done / 18 * 100) + '%';
-  if (done) {
-    const latest = [...currentLogs].sort((a, b) => new Date(b.date) - new Date(a.date))[0];
-    document.getElementById('stat-days').textContent =
-      Math.round((new Date().setHours(0,0,0,0) - new Date(latest.date)) / 86400000);
-  }
+  const done   = currentLogs.length;
+  const streak = beregnStreak(currentLogs);
+  document.getElementById('stat-done').textContent   = done;
+  document.getElementById('stat-left').textContent   = Math.max(0, 18 - done);
+  document.getElementById('stat-pct').textContent    = Math.round(done / 18 * 100) + '%';
+  document.getElementById('stat-streak').textContent = streak > 0 ? `${streak}🔥` : '0';
+
   const c = { lett: 0, passe: 0, tungt: 0 };
   currentLogs.forEach(l => { if (c[l.feel] !== undefined) c[l.feel]++; });
   const mx = Math.max(1, ...Object.values(c));
@@ -469,7 +729,7 @@ function buildHistory() {
 }
 
 function buildSessionSelect() {
-  const sel = document.getElementById('sel-session');
+  const sel    = document.getElementById('sel-session');
   const logged = loggedIds();
   sel.innerHTML = '<option value="">Velg økt...</option>';
   PROGRAM.forEach(week => {
@@ -477,7 +737,7 @@ function buildSessionSelect() {
     og.label = `Uke ${week.week} · ${week.tag}`;
     week.sessions.forEach(s => {
       const o = document.createElement('option');
-      o.value = s.id;
+      o.value       = s.id;
       o.textContent = `${s.label}${logged.has(s.id) ? ' ✓' : ''} – ${s.desc.slice(0, 42)}…`;
       og.appendChild(o);
     });
@@ -485,6 +745,49 @@ function buildSessionSelect() {
   });
 }
 
+// ── Feiringer ved logging ────────────────────────────────────
+function sjekkFeiringer(logsEtter, sessionId) {
+  const streak     = beregnStreak(logsEtter);
+  const done       = logsEtter.length;
+  const weekNum    = parseInt(sessionId.split('-')[0]);
+  const ukeFullfort = PROGRAM.find(w => w.week === weekNum)
+    ?.sessions.every(s => logsEtter.some(l => l.sessionId === s.id));
+
+  // Uke fullført
+  if (ukeFullfort) {
+    setTimeout(() => visFeiring('🏆', `Uke ${weekNum} fullført!`,
+      `Utrolig bra! Du har nå fullført alle tre øktene for uke ${weekNum}. Kroppen din merker det!`), 400);
+    return;
+  }
+  // Halvveis
+  if (done === 9) {
+    setTimeout(() => visFeiring('⚡', 'Halvveis!', 'Du er halvveis gjennom programmet. Det er akkurat her mange gir opp – ikke du!'), 400);
+    return;
+  }
+  // Ferdig
+  if (done === 18) {
+    setTimeout(() => visFeiring('🏅', 'PROGRAMMET FULLFØRT!', 'Du har gjennomført alle 18 øktene! Du møter opp til høsten som en sterkere håndballspiller. Godt jobbet!', true), 400);
+    return;
+  }
+  // Streak milepæler
+  if (streak === 7) {
+    setTimeout(() => visFeiring('🔥', 'EN UKE PÅ RAD!', 'Sju dager med trening på rad. Det er en vane nå – kroppen din vet hva den skal gjøre!'), 400);
+    return;
+  }
+  if (streak === 3) {
+    setTimeout(() => visFeiring('🔥', 'Tre dager på rad!', 'Du bygger en vane. Fortsett!'), 400);
+    return;
+  }
+  // Første økt
+  if (done === 1) {
+    setTimeout(() => visFeiring('🌟', 'Første økt logget!', 'Det vanskeligste er å starte – og det har du gjort nå. Heretter blir det enklere!'), 400);
+    return;
+  }
+  // Standard konfetti uten overlay
+  startKonfetti(2);
+}
+
+// ── Globals ──────────────────────────────────────────────────
 window.showView = name => {
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
@@ -511,15 +814,23 @@ window.logSession = async () => {
   if (!date)         { showToast('Velg en dato!', '#e74c3c'); return; }
   if (!selectedFeel) { showToast('Velg hvordan det kjentes!', '#e74c3c'); return; }
   if (loggedIds().has(sid)) { showToast('Allerede logget!', '#f59e0b'); return; }
+
   const btn = document.getElementById('log-btn');
   btn.textContent = 'Lagrer…'; btn.disabled = true;
-  await addLog({ id: Date.now().toString(), sessionId: sid, date, feel: selectedFeel, note, logged: new Date().toISOString() });
+
+  const entry = { id: Date.now().toString(), sessionId: sid, date, feel: selectedFeel, note, logged: new Date().toISOString() };
+  await addLog(entry);
+
+  const logsEtter = [...currentLogs];
+  sjekkFeiringer(logsEtter, sid);
+
   btn.textContent = '✅ \u00a0LOGG ØKTEN'; btn.disabled = false;
   document.getElementById('sel-session').value = '';
   document.getElementById('inp-note').value    = '';
   selectedFeel = '';
   ['lett', 'passe', 'tungt'].forEach(x => document.getElementById('feel-' + x).classList.remove('selected'));
   showToast('Økt logget! 💪');
+  showView('program');
 };
 
 window.delLog = async id => { await removeLog(id); showToast('Økt slettet', '#888'); };
@@ -531,6 +842,7 @@ function showToast(msg, color = '#22c55e') {
   setTimeout(() => t.classList.remove('show'), 2600);
 }
 
+// Init
 document.getElementById('inp-date').value = new Date().toISOString().slice(0, 10);
 </script>
 </body>
