@@ -185,6 +185,105 @@ body { font-family: 'Barlow', sans-serif; background: var(--off); color: var(--t
 .empty-text { font-size:14px; line-height:1.5; }
 .toast { position:fixed; bottom:80px; left:50%; transform:translateX(-50%) translateY(16px); background:#22c55e; color:white; padding:11px 22px; border-radius:28px; font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:14px; opacity:0; transition:all .28s; z-index:999; white-space:nowrap; box-shadow:0 4px 18px rgba(0,0,0,.14); pointer-events:none; }
 .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+/* ØKTGUIDE */
+.guide-screen {
+  position: fixed; inset: 0; z-index: 500;
+  background: var(--off); overflow-y: auto;
+  display: none; flex-direction: column;
+}
+.guide-screen.show { display: flex; }
+.guide-header {
+  background: var(--blue); padding: 16px 18px;
+  padding-top: max(env(safe-area-inset-top), 16px);
+  display: flex; align-items: center; gap: 14px;
+  position: sticky; top: 0; z-index: 10;
+}
+.guide-back {
+  background: rgba(255,255,255,0.15); border: none; color: white;
+  border-radius: 8px; padding: 7px 12px; cursor: pointer;
+  font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:14px;
+}
+.guide-header-title {
+  font-family:'Barlow Condensed',sans-serif; font-weight:900;
+  font-size:18px; color:white; flex:1;
+}
+.guide-header-sub { font-size:11px; color:var(--mid); margin-top:1px; }
+.guide-body { padding: 20px 16px 40px; max-width: 480px; margin: 0 auto; width: 100%; }
+
+.guide-filosofi {
+  background: linear-gradient(135deg, var(--blue), var(--blue-mid));
+  border-radius: var(--r); padding: 18px; color: white; margin-bottom: 18px;
+  position: relative; overflow: hidden;
+}
+.guide-filosofi::before {
+  content: '🏃'; position: absolute; right: 16px; top: 12px; font-size: 48px; opacity: 0.2;
+}
+.guide-filosofi-title {
+  font-family:'Barlow Condensed',sans-serif; font-weight:900;
+  font-size:16px; letter-spacing:.5px; margin-bottom:8px;
+}
+.guide-filosofi-text { font-size:13px; line-height:1.6; color:rgba(255,255,255,0.9); }
+
+.guide-card {
+  background: white; border-radius: var(--r); box-shadow: var(--shadow);
+  margin-bottom: 14px; overflow: hidden;
+}
+.guide-card-header {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 16px; border-bottom: 2px solid var(--light);
+  cursor: pointer;
+}
+.guide-card-num {
+  width: 36px; height: 36px; border-radius: 10px; background: var(--blue);
+  color: white; font-family:'Barlow Condensed',sans-serif; font-weight:900;
+  font-size:18px; display:flex; align-items:center; justify-content:center; flex-shrink:0;
+}
+.guide-card-num.done { background: #22c55e; }
+.guide-card-title-wrap { flex: 1; }
+.guide-card-title {
+  font-family:'Barlow Condensed',sans-serif; font-weight:800;
+  font-size:15px; color:var(--text);
+}
+.guide-card-sub { font-size:11px; color:var(--grey); margin-top:1px; }
+.guide-card-status {
+  font-family:'Barlow Condensed',sans-serif; font-weight:700;
+  font-size:11px; padding:3px 8px; border-radius:10px;
+}
+.guide-card-status.done { background:#dcfce7; color:#15803d; }
+.guide-card-status.open { background:var(--light); color:var(--blue); }
+
+.guide-card-body { padding: 0 16px; max-height: 0; overflow: hidden; transition: max-height .35s ease, padding .35s ease; }
+.guide-card-body.open { max-height: 600px; padding: 14px 16px 18px; }
+
+.guide-section-label {
+  font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:10px;
+  letter-spacing:2px; text-transform:uppercase; color:var(--grey); margin-bottom:5px; margin-top:12px;
+}
+.guide-section-label:first-child { margin-top:0; }
+.guide-text { font-size:13px; color:var(--text); line-height:1.65; }
+.guide-tip {
+  background: var(--light); border-radius: 9px; padding: 10px 13px;
+  font-size:12.5px; color:var(--blue); line-height:1.6; margin-top:10px;
+  border-left: 3px solid var(--blue);
+}
+.guide-tip-advanced {
+  background: #fff7ed; border-radius: 9px; padding: 10px 13px;
+  font-size:12px; color:#c2410c; line-height:1.6; margin-top:8px;
+  border-left: 3px solid #f97316;
+}
+.guide-start-btn {
+  width:100%; margin-top:14px; padding:13px;
+  background:var(--blue); color:white; border:none; border-radius:10px;
+  font-family:'Barlow Condensed',sans-serif; font-weight:800;
+  font-size:15px; letter-spacing:1px; cursor:pointer;
+  transition:background .15s;
+}
+.guide-start-btn:hover { background:var(--blue-mid); }
+.guide-start-btn.done-btn { background:#dcfce7; color:#15803d; cursor:default; }
+
+/* Fane for øktguide */
+.nav-guide-tab { display:flex; }
+
 /* TILGANGSKODE */
 .access-screen {
   position: fixed; inset: 0; z-index: 2000;
@@ -306,6 +405,7 @@ body { font-family: 'Barlow', sans-serif; background: var(--off); color: var(--t
   <button class="nav-btn"        onclick="showView('logg')"       id="nav-logg"      ><span class="ni">✏️</span>Logg økt</button>
   <button class="nav-btn"        onclick="showView('historikk')"  id="nav-historikk" ><span class="ni">📅</span>Historikk</button>
   <button class="nav-btn"        onclick="showView('statistikk')" id="nav-statistikk"><span class="ni">📊</span>Statistikk</button>
+  <button class="nav-btn"        onclick="visGuide()" id="nav-guide"><span class="ni">📖</span>Guide</button>
 </nav>
 
 <div class="main">
@@ -945,8 +1045,162 @@ function showToast(msg, color = '#22c55e') {
   setTimeout(() => t.classList.remove('show'), 2600);
 }
 
+
+// ── ØKTGUIDE DATA ────────────────────────────────────────────
+const GUIDE = [
+  {
+    id: "rolig-jogg",
+    tittel: "Rolig jogg",
+    undertittel: "Grunnlaget for all kondisjon",
+    okter: ["1-1","1-2","2-1","2-2","3-1","4-1","5-1","6-1"],
+    maal: "Bygge et aerobisk grunnlag – den motoren som gjør at du orker å spille intenst i hele kampen.",
+    slik: "Løp i et tempo der du kan snakke i hele setninger. Hvis du ikke klarer det, er du for rask. Det høres lett ut – og det skal det. Det ER poenget.",
+    trener: "Mange tror rolig jogg er "juks" eller for lett. Det er det ikke. Dette er akkurat den treningen som bygger den kondisen du trenger for å duellere hardt i siste minutt. Kroppen din vet ikke om du løper fort eller sakte – den vet bare om du jobber lenge nok.",
+    avansert: "Har du allerede god kondis? Flott! Øk tempoet til du er på grensen av å kunne snakke, men hold deg der. Ikke løp fortere enn det.",
+  },
+  {
+    id: "drag",
+    tittel: "Drag og intervaller",
+    undertittel: "Bygg kampkondis",
+    okter: ["1-3","2-3","3-2","4-2","5-2","6-2"],
+    maal: "Tren kroppen til å jobbe hardt, hente seg inn igjen – og jobbe hardt igjen. Akkurat som i en håndballkamp.",
+    slik: "Varm opp med rolig jogg i noen minutter. Så løper du "litt tyngre" i den angitte tiden – du skal kjenne det, men du skal ikke være utslitt. Ta pause med rolig jogg eller gåing mellom hvert drag. Avslutt rolig.",
+    trener: "Disse øktene er der du virkelig bygger kampkondis. Men husk: det er ikke om å gå hardest mulig på hvert drag. Det handler om å holde et jevnt, litt krevende tempo gjennom alle dragene – ikke bare det første.",
+    avansert: "Kjenner du at dragene er for lette? Øk tempoet slik at du virkelig kjenner det – men du skal fortsatt klare alle dragene med samme innsats. Ikke bruk alt på første drag.",
+  },
+  {
+    id: "kombinasjon",
+    tittel: "Kombinasjonsøkt",
+    undertittel: "Rolig jogg + avslutningsdrag",
+    okter: ["3-3","4-3","5-3","6-3"],
+    maal: "Trene kroppen til å presse seg selv når du allerede er litt sliten – akkurat som siste del av en kamp.",
+    slik: "Start med rolig jogg i angitt tid. De siste minuttene øker du tempoet til "litt tyngre". Det er her magien skjer – du trener kroppen til å finne gir nummer to når det er slitsomt.",
+    trener: "Dette er den viktigste økttypen for håndball. I siste periode av kampen er alle slitne – men de som har trent dette vet at kroppen faktisk har mer å gi. Den følelsen bygger du her.",
+    avansert: "De siste minuttene kan du presse enda mer – nesten opp mot maks. Du skal kjenne at det er tøft, men hold formen i løpingen.",
+  },
+];
+
+function visGuide() {
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('nav-guide').classList.add('active');
+  byggGuide();
+  document.getElementById('guide-screen').classList.add('show');
+}
+
+window.lukkGuide = () => {
+  document.getElementById('guide-screen').classList.remove('show');
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('nav-program').classList.add('active');
+};
+
+function finnGuideType(oektId) {
+  return GUIDE.find(g => g.okter.includes(oektId));
+}
+
+function byggGuide() {
+  const body   = document.getElementById('guide-body');
+  const logged = loggedIds();
+
+  let html = `
+    <div class="guide-filosofi">
+      <div class="guide-filosofi-title">🌟 Din reise – ditt tempo</div>
+      <div class="guide-filosofi-text">
+        Dette programmet har ingen fasit på hvor fort du skal løpe. Det eneste som teller er at du møter opp og gjennomfører.<br><br>
+        Du som allerede har god kondis kan øke tempoet. Du som er ny til dette tar det i ditt eget tempo. Begge gjør riktig – fordi begge blir bedre.<br><br>
+        <strong>Ikke sammenlign deg med andre. Din fremgang er din egen.</strong>
+      </div>
+    </div>
+    <div class="st" style="margin-top:0">De tre økt-typene</div>
+  `;
+
+  GUIDE.forEach((g, i) => {
+    const antallDone = g.okter.filter(id => logged.has(id)).length;
+    const erDone     = antallDone > 0;
+    const oektNavn   = g.okter.map(id => {
+      const si = PROGRAM.flatMap(w=>w.sessions).find(s=>s.id===id);
+      return si ? `Uke ${id.split('-')[0]} ${si.label}` : id;
+    }).join(', ');
+
+    html += `
+      <div class="guide-card">
+        <div class="guide-card-header" onclick="toggleGuideKort(${i})">
+          <div class="guide-card-num ${erDone?'done':''}">${erDone?'✓':(i+1)}</div>
+          <div class="guide-card-title-wrap">
+            <div class="guide-card-title">${g.tittel}</div>
+            <div class="guide-card-sub">${g.undertittel}</div>
+          </div>
+          <div class="guide-card-status ${erDone?'done':'open'}">${erDone ? antallDone+' gjort' : 'Les mer'}</div>
+        </div>
+        <div class="guide-card-body" id="guide-kort-${i}">
+          <div class="guide-section-label">🎯 Målet med denne økttypen</div>
+          <div class="guide-text">${g.maal}</div>
+
+          <div class="guide-section-label">🏃 Slik gjør du det</div>
+          <div class="guide-text">${g.slik}</div>
+
+          <div class="guide-tip">
+            💬 <strong>Trenerens ord:</strong> ${g.trener}
+          </div>
+
+          <div class="guide-tip-advanced">
+            ⚡ <strong>Har du god kondis allerede?</strong> ${g.avansert}
+          </div>
+
+          <button class="guide-start-btn" onclick="gaaTilLogg('${g.okter[0]}')">
+            Start en ${g.tittel.toLowerCase()}-økt →
+          </button>
+        </div>
+      </div>`;
+  });
+
+  // Alle øktene med status
+  html += `<div class="st">Alle 18 økter</div>`;
+  PROGRAM.forEach(week => {
+    week.sessions.forEach(s => {
+      const er = logged.has(s.id);
+      const type = finnGuideType(s.id);
+      html += `
+        <div class="guide-card" style="margin-bottom:8px">
+          <div class="guide-card-header" onclick="gaaTilLogg('${s.id}')">
+            <div class="guide-card-num ${er?'done':''}" style="font-size:13px;width:32px;height:32px">${er?'✓':s.id}</div>
+            <div class="guide-card-title-wrap">
+              <div class="guide-card-title" style="font-size:13px">Uke ${week.week} · ${s.label}</div>
+              <div class="guide-card-sub">${s.desc}</div>
+            </div>
+            <div class="guide-card-status ${er?'done':'open'}">${er?'✓ Gjort':'Logg'}</div>
+          </div>
+        </div>`;
+    });
+  });
+
+  body.innerHTML = html;
+}
+
+window.toggleGuideKort = i => {
+  const el = document.getElementById(`guide-kort-${i}`);
+  el.classList.toggle('open');
+};
+
+window.gaaTilLogg = id => {
+  lukkGuide();
+  showView('logg');
+  document.getElementById('sel-session').value = id;
+};
+
 // Init
 document.getElementById('inp-date').value = new Date().toISOString().slice(0, 10);
 </script>
+
+<!-- ØKTGUIDE SKJERM -->
+<div class="guide-screen" id="guide-screen">
+  <div class="guide-header">
+    <button class="guide-back" onclick="lukkGuide()">← Tilbake</button>
+    <div>
+      <div class="guide-header-title">Øktguide</div>
+      <div class="guide-header-sub">Din reise – ditt tempo</div>
+    </div>
+  </div>
+  <div class="guide-body" id="guide-body"></div>
+</div>
 </body>
 </html>
