@@ -8,6 +8,9 @@
 <meta name="apple-mobile-web-app-title" content="LFH09 Trening">
 <meta name="theme-color" content="#003087">
 <title>LFH09 J2011 · Treningslogg</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon.svg">
+<meta name="mobile-web-app-capable" content="yes">
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -182,6 +185,51 @@ body { font-family: 'Barlow', sans-serif; background: var(--off); color: var(--t
 .empty-text { font-size:14px; line-height:1.5; }
 .toast { position:fixed; bottom:80px; left:50%; transform:translateX(-50%) translateY(16px); background:#22c55e; color:white; padding:11px 22px; border-radius:28px; font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:14px; opacity:0; transition:all .28s; z-index:999; white-space:nowrap; box-shadow:0 4px 18px rgba(0,0,0,.14); pointer-events:none; }
 .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+/* TILGANGSKODE */
+.access-screen {
+  position: fixed; inset: 0; z-index: 2000;
+  background: var(--blue);
+  display: flex; align-items: center; justify-content: center;
+  padding: 24px;
+}
+.access-box {
+  background: white; border-radius: 20px; padding: 32px 24px;
+  max-width: 320px; width: 100%; text-align: center;
+}
+.access-logo { height: 56px; width: auto; margin-bottom: 16px; }
+.access-title {
+  font-family:'Barlow Condensed',sans-serif; font-weight:900;
+  font-size: 22px; color: var(--blue); margin-bottom: 6px;
+}
+.access-sub { font-size: 13px; color: var(--grey); margin-bottom: 20px; line-height: 1.5; }
+.access-input {
+  width: 100%; padding: 13px 16px; border: 2px solid var(--mid);
+  border-radius: 10px; font-family:'Barlow Condensed',sans-serif;
+  font-weight: 700; font-size: 18px; letter-spacing: 3px;
+  text-align: center; text-transform: uppercase; outline: none;
+  margin-bottom: 12px; transition: border-color .2s;
+}
+.access-input:focus { border-color: var(--blue); }
+.access-input.feil { border-color: var(--red); animation: rist .3s ease; }
+@keyframes rist {
+  0%,100% { transform: translateX(0); }
+  25%      { transform: translateX(-8px); }
+  75%      { transform: translateX(8px); }
+}
+.access-btn {
+  width: 100%; padding: 14px; background: var(--blue); color: white;
+  border: none; border-radius: 10px;
+  font-family:'Barlow Condensed',sans-serif; font-weight:800;
+  font-size: 16px; letter-spacing: 1px; cursor: pointer;
+  transition: background .15s;
+}
+.access-btn:hover { background: var(--blue-mid); }
+.access-feilmelding {
+  font-size: 12px; color: var(--red); margin-top: 8px;
+  font-family:'Barlow Condensed',sans-serif; font-weight:700;
+  min-height: 18px;
+}
+
 
 /* KONFETTI */
 #konfetti-canvas { position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:9999; }
@@ -211,6 +259,21 @@ body { font-family: 'Barlow', sans-serif; background: var(--off); color: var(--t
 <body>
 
 <canvas id="konfetti-canvas"></canvas>
+<!-- TILGANGSKODE SKJERM -->
+<div class="access-screen" id="access-screen">
+  <div class="access-box">
+    <img src="https://raw.githubusercontent.com/samuel-andersen/lfh09-j20111trening/main/lfh09-logo.svg"
+         class="access-logo" alt="LFH09">
+    <div class="access-title">LFH09 J2011</div>
+    <div class="access-sub">Skriv inn lagets tilgangskode for å komme inn i treningsappen.</div>
+    <input type="text" class="access-input" id="access-input"
+           placeholder="KODE" maxlength="10"
+           onkeydown="if(event.key==='Enter') sjekkKode()">
+    <button class="access-btn" onclick="sjekkKode()">Gå inn →</button>
+    <div class="access-feilmelding" id="access-feil"></div>
+  </div>
+</div>
+
 
 <!-- FEIRING OVERLAY -->
 <div class="feiring" id="feiring">
@@ -328,6 +391,35 @@ import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChang
 import { getFirestore, collection, doc, setDoc, deleteDoc, onSnapshot, query, orderBy, getDoc, setDoc as fsSet }
                               from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
+
+// ── Tilgangskode ────────────────────────────────────────────
+const TILGANGSKODE = "096202"; // ← Bytt denne koden neste sesong
+
+function sjekkTilgang() {
+  const lagret = localStorage.getItem('lfh-tilgang');
+  if (lagret === TILGANGSKODE) {
+    document.getElementById('access-screen').style.display = 'none';
+  }
+}
+
+window.sjekkKode = () => {
+  const input = document.getElementById('access-input');
+  const feil  = document.getElementById('access-feil');
+  const kode  = input.value.trim().toUpperCase();
+  if (kode === TILGANGSKODE) {
+    localStorage.setItem('lfh-tilgang', TILGANGSKODE);
+    document.getElementById('access-screen').style.display = 'none';
+  } else {
+    input.classList.add('feil');
+    feil.textContent = 'Feil kode – prøv igjen';
+    setTimeout(() => input.classList.remove('feil'), 400);
+    input.value = '';
+    input.focus();
+  }
+};
+
+sjekkTilgang();
+
 // ── Firebase config ─────────────────────────────────────────
 const firebaseConfig = {
   apiKey:            "AIzaSyA_TbOi0heY4JrB-Ly6VnI5Tk0N3pufB40",
@@ -338,10 +430,10 @@ const firebaseConfig = {
   appId:             "1:207901704516:web:fb67d00fa340298fa59711"
 };
 
-const app      = initializeApp(firebaseConfig);
-const auth     = getAuth(app);
-const db       = getFirestore(app);
-const provider = new GoogleAuthProvider();
+const app               = initializeApp(firebaseConfig);
+const auth              = getAuth(app);
+const db                = getFirestore(app);
+const provider          = new GoogleAuthProvider();
 
 let currentUser = null, unsubLogs = null;
 let localLogs   = JSON.parse(localStorage.getItem('lfh-logs') || '[]');
@@ -574,16 +666,21 @@ function updateAuthUI() {
         <span class="auth-sub">Logg inn for skylagring</span>
       </div>
       <button class="auth-btn sign-in" id="btn-signin">
-        <svg width="14" height="14" viewBox="0 0 24 24">
-          <path fill="white" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-          <path fill="white" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-          <path fill="white" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/>
-          <path fill="white" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-        </svg>
-        Logg inn med Google
-      </button>`;
+          <svg width="14" height="14" viewBox="0 0 24 24">
+            <path fill="white" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+            <path fill="white" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+            <path fill="white" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/>
+            <path fill="white" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+          </svg>
+          Google
+        </button>
+
+
+      </div>`;
     document.getElementById('btn-signin').onclick = () =>
       signInWithPopup(auth, provider).catch(console.error);
+
+
   }
 }
 
